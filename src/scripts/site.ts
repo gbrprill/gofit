@@ -160,8 +160,10 @@ if (hero && h1 && wipe && !RM) {
   gsap.set('.hero__bar', { scaleX: 0, transformOrigin: 'left center' });
   gsap.set(stars, { scale: 0 });
   root.classList.add('is-in');
-  gsap.timeline({ delay: 0.15 })
-    .to(wipe, { scaleX: 1, duration: 0.5, ease: 'power4.inOut' })
+  const tl = gsap.timeline({ delay: 0.15 });
+  // Se a aba abrir em segundo plano, a animação espera; nunca deixa o título escondido.
+  setTimeout(() => { if (tl.progress() < 1) tl.progress(1); }, 3200);
+  tl.to(wipe, { scaleX: 1, duration: 0.5, ease: 'power4.inOut' })
     .set(h1, { autoAlpha: 1 })
     .set(wipe, { transformOrigin: 'right center' })
     .to(wipe, { scaleX: 0, duration: 0.55, ease: 'power4.inOut' })
