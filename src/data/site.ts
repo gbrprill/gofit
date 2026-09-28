@@ -36,7 +36,7 @@ export const CTA = {
   label: 'Agendar visita',
   labelLong: 'Agendar uma visita',
   message: (unit: string, mod?: string | null) =>
-    `Olá, GOFIT! Quero agendar uma visita na unidade ${unit}${mod ? ` e conhecer o ${mod}` : ''}.`,
+    `Olá, GOFIT! Quero agendar uma visita na unidade ${unit}.${mod ? ` Tenho interesse em ${mod}.` : ''}`,
 };
 
 export const UNITS: Record<UnitKey, Unit> = {
