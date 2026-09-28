@@ -1,0 +1,23 @@
+---
+import Pic from './Pic.astro';
+import { UNITS, type Modality, type UnitKey } from '../data/site';
+interface Props { m: Modality; unit?: UnitKey }
+const { m, unit } = Astro.props;
+const where = m.units.map((k) => UNITS[k].short);
+const whereText = where.length === 3 ? 'Nas 3 unidades' : where.length === 2 ? `${where[0]} e ${where[1]}` : where[0];
+---
+<li class:list={['mc', { 'mc--g': !m.img }]} data-tilt>
+  {m.img && (<><div class="mc__media zoom"><Pic base={m.img.base} alt={m.img.alt} sizes="(max-width: 760px) 82vw, 410px" pos={m.img.pos} /></div><div class="mc__shade"></div></>)}
+  {m.art === 'rpm' && (<div class="mc__art" aria-hidden="true"><svg class="ring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" /><circle class="tick" cx="100" cy="100" r="88" /></svg><span class="mc__big">RPM</span></div>)}
+  {m.art === 'bpm' && (<div class="mc__art" aria-hidden="true"><span class="mc__big">BPM</span><span class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>)}
+  {m.art === 'one' && (<div class="mc__art" aria-hidden="true"><span class="mc__big">1:1</span></div>)}
+  <div class="mc__body">
+    <span class="mc__tag">{m.tag}</span>
+    <h3 class="mc__t">{m.name}</h3>
+    <p class="mc__d">{m.text}</p>
+    <div class="mc__foot">
+      <span class="mc__u">{unit ? 'Nesta unidade' : whereText}</span>
+      <a class="mc__cta" href="#unidades" data-wa="modalidade" data-mod={m.name} data-unit={unit} target="_blank" rel="noopener">Quero conhecer<svg aria-hidden="true"><use href="#arr" /></svg></a>
+    </div>
+  </div>
+</li>

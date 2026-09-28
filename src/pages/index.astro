@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Board from '../components/Board.astro';
+import Manifesto from '../components/Manifesto.astro';
+import Method from '../components/Method.astro';
+import Modalities from '../components/Modalities.astro';
+import Quiz from '../components/Quiz.astro';
+import Structure from '../components/Structure.astro';
+import Calculator from '../components/Calculator.astro';
+import Units from '../components/Units.astro';
+import Community from '../components/Community.astro';
+import FirstVisit from '../components/FirstVisit.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { UNITS, UNIT_ORDER } from '../data/site';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Organization', '@id': `${site}/#gofit`, name: 'GOFIT Premium Gym', url: `${site}/`, logo: `${site}/img/logo.png`, sameAs: UNIT_ORDER.map((k) => `https://www.instagram.com/${UNITS[k].instagram}/`) },
+    ...UNIT_ORDER.map((k) => ({
+      '@type': 'ExerciseGym',
+      '@id': `${site}/${UNITS[k].slug}/#gym`,
+      name: `GOFIT ${UNITS[k].name}`,
+      url: `${site}/${UNITS[k].slug}/`,
+      parentOrganization: { '@id': `${site}/#gofit` },
+      address: { '@type': 'PostalAddress', streetAddress: UNITS[k].address, addressLocality: UNITS[k].city, addressRegion: 'PR', postalCode: UNITS[k].cep, addressCountry: 'BR' },
+      sameAs: `https://www.instagram.com/${UNITS[k].instagram}/`,
+    })),
+  ],
+};
+---
+<Base
+  home
+  title="GOFIT Premium Gym · Centro de treinamento em Realeza, Francisco Beltrão e Pato Branco"
+  description="Centro de treinamento premium no Sudoeste do Paraná. Musculação, funcional, cross, spinning, fit dance e personal em Realeza, Francisco Beltrão e Pato Branco."
+  ld={ld}
+>
+  <Hero />
+  <Marquee />
+  <Board />
+  <Manifesto />
+  <Method />
+  <Modalities />
+  <Quiz />
+  <Structure />
+  <Calculator />
+  <Units />
+  <Community />
+  <FirstVisit />
+  <FinalCta />
+</Base>

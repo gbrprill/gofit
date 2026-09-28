@@ -1,0 +1,49 @@
+---
+import { CTA } from '../data/site';
+const steps = [
+  { k: 'obj', q: 'Qual é o seu objetivo agora?', o: [['hip', 'Ganhar massa', 'Hipertrofia e força'], ['ema', 'Emagrecer', 'Gasto calórico e definição'], ['con', 'Condicionamento', 'Fôlego, potência e resistência'], ['sau', 'Saúde e rotina', 'Constância e disposição']] },
+  { k: 'niv', q: 'Como está seu treino hoje?', o: [['ini', 'Começando', 'Parado há um tempo ou nunca treinei'], ['int', 'Já treino', 'Tenho base e quero evoluir'], ['adv', 'Treino pesado', 'Busco carga, técnica e detalhe']] },
+  { k: 'uni', q: 'Onde você vai treinar?', o: [['rz', 'Realeza', 'Musculação, cross, spinning e fit dance'], ['fb', 'Francisco Beltrão', 'Musculação, funcional e fit dance'], ['pb', 'Pato Branco', 'Musculação e personal, com Panatta']] },
+];
+---
+<section class="sec qzs" id="seu-treino" aria-labelledby="qz-t">
+  <div class="wrap qz__g">
+    <div class="qz__intro">
+      <h2 class="h2" id="qz-t">Qual treino <span class="y">é o seu?</span></h2>
+      <p class="lead">Três perguntas. No fim, você recebe um ponto de partida e fala direto com a unidade certa.</p>
+    </div>
+    <div class="qz" id="quiz">
+      <div class="qz__top">
+        <div class="qz__prog" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        <span class="lbl" id="qzstep">Pergunta 1 de 3</span>
+        <button class="qz__back" type="button" id="qzback" hidden><svg aria-hidden="true"><use href="#arrl" /></svg>Voltar</button>
+      </div>
+      <div class="qz__body" aria-live="polite">
+        {steps.map((s, i) => (
+          <div class="qz__step" data-step={i + 1} hidden={i > 0}>
+            <h3 class="qz__q">{s.q}</h3>
+            <div class="qz__opts">
+              {s.o.map(([v, t, sub]) => (
+                <button class="qo" type="button" data-k={s.k} data-v={v} aria-pressed="false"><span class="qo__t">{t}</span><span class="qo__s">{sub}</span></button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div class="qz__res" id="qzres" hidden>
+          <span class="lbl">Seu ponto de partida</span>
+          <div><p class="qz__rt" id="qzr1">Musculação</p><p class="qz__rs" id="qzr2"></p></div>
+          <p class="qz__rp" id="qzrp"></p>
+          <dl class="qz__card">
+            <div><dt class="lbl">Objetivo</dt><dd id="qzc1"></dd></div>
+            <div><dt class="lbl">Nível</dt><dd id="qzc2"></dd></div>
+            <div><dt class="lbl">Unidade</dt><dd id="qzc3"></dd></div>
+          </dl>
+          <div class="qz__acts">
+            <a class="btn btn--y" id="qzwa" href="#unidades" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa" /></svg>{CTA.label}</a>
+            <button class="lnk" type="button" id="qzredo"><span>Refazer</span><svg aria-hidden="true"><use href="#arr" /></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+---
+// As palavras são separadas no build: a animação só acende cada uma.
+const parts: { t: string; acc?: boolean }[] = [
+  { t: 'Aqui ninguém treina no' }, { t: 'automático.', acc: true },
+  { t: 'Cada série tem motivo. Cada carga tem método. Cada treino tem' }, { t: 'propósito.', acc: true },
+];
+const words = parts.flatMap((p) => p.t.split(' ').map((w) => ({ w, acc: !!p.acc })));
+---
+<section class="mf" id="manifesto" aria-label="Manifesto">
+  <div class="wrap mf__in">
+    <p class="mf__txt">
+      {words.map((x, i) => <><span class:list={['w', { acc: x.acc }]}>{x.w}</span>{i < words.length - 1 ? ' ' : ''}</>)}
+    </p>
+    <p class="mf__sign"><span class="mf__meter" aria-hidden="true"><i></i>{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</span>O propósito muda o jogo.</p>
+  </div>
+</section>

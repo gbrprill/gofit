@@ -1,0 +1,14 @@
+---
+interface Props { base: string; alt: string; sizes?: string; loading?: 'lazy' | 'eager'; pos?: string; priority?: boolean; cls?: string }
+const WIDTHS: Record<string, number[]> = { hero: [800, 1280, 1920], anilha: [720, 1080], halter: [800, 1400], kettlebells: [800, 1400] };
+const DIMS: Record<string, [number, number]> = { hero: [1920, 1080], anilha: [1080, 1600], halter: [1400, 875], kettlebells: [1400, 875] };
+const { base, alt, sizes = '100vw', loading = 'lazy', pos, priority = false, cls } = Astro.props;
+const ws = WIDTHS[base];
+const [w, h] = DIMS[base];
+const set = (ext: string) => ws.map((x) => `/img/${base}-${x}.${ext} ${x}w`).join(', ');
+const fallback = `/img/${base}-${ws[ws.length - 1]}.jpg`;
+---
+<picture class={cls}>
+  <source type="image/webp" srcset={set('webp')} sizes={sizes} />
+  <img src={fallback} srcset={set('jpg')} sizes={sizes} alt={alt} width={w} height={h} loading={priority ? 'eager' : loading} decoding="async" fetchpriority={priority ? 'high' : undefined} style={pos ? `object-position:${pos}` : undefined} />
+</picture>

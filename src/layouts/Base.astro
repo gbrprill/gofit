@@ -1,0 +1,159 @@
+---
+import '@fontsource-variable/montserrat';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/barlow-condensed/800.css';
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '../styles/global.css';
+import Sprite from '../components/Sprite.astro';
+import { UNITS, UNIT_ORDER, CTA, LEGAL, waHref, type UnitKey } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  unit?: UnitKey;
+  ld?: object;
+  home?: boolean;
+}
+const { title, description, unit, ld, home = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = new URL('/img/og.jpg', Astro.site);
+const h = (id: string) => (home ? `#${id}` : `/#${id}`);
+const nav = [
+  { id: 'metodo', label: 'Método' },
+  { id: 'modalidades', label: 'Modalidades' },
+  { id: 'seu-treino', label: 'Seu treino' },
+  { id: 'estrutura', label: 'Estrutura' },
+  { id: 'unidades', label: 'Unidades' },
+  { id: 'primeira-vez', label: 'Primeira vez' },
+];
+const u = unit ? UNITS[unit] : null;
+const wa = (origin: string) => (unit && u ? waHref(unit, CTA.message(u.name), origin) : h('unidades'));
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="theme-color" content="#0a0a09" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="GOFIT Premium Gym" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={og} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="/img/favicon.png" />
+  <link rel="apple-touch-icon" href="/img/favicon.png" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <script is:inline>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('rm', 'is-in'); } catch (e) {}
+      setTimeout(function () { d.classList.add('is-in'); }, 2600);
+    })();
+  </script>
+  {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+</head>
+<body data-unit={unit}>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <Sprite />
+  <div class="prog" id="prog" aria-hidden="true"></div>
+  <canvas class="chalk" id="chalk" aria-hidden="true"></canvas>
+
+  <header class="hdr" id="hdr">
+    <div class="wrap hdr__in">
+      <a class="hdr__logo" href="/" aria-label="GOFIT Premium Gym, página inicial">
+        <picture>
+          <source type="image/webp" srcset="/img/logo-400.webp" />
+          <img src="/img/logo-400.png" alt="GOFIT Premium Gym" width="400" height="172" />
+        </picture>
+      </a>
+      <nav class="nav" aria-label="Seções">
+        {nav.map((n) => <a href={h(n.id)} data-nav={n.id}>{n.label}</a>)}
+      </nav>
+      <div class="hdr__r">
+        <button class="ubtn" type="button" data-open-unit aria-label="Escolher unidade">
+          <span class="ubtn__t"><small>Unidade</small><b data-u-short>{u ? u.short : 'Escolher'}</b></span>
+          <svg aria-hidden="true"><use href="#chev" /></svg>
+        </button>
+        <a class="btn btn--y btn--sm hcta" href={wa('topo')} data-wa="topo" data-unit={unit} target="_blank" rel="noopener">{CTA.label}</a>
+        <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><span><i></i><i></i><i></i></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu" id="menu">
+    <nav class="menu__nav" aria-label="Menu principal">
+      {nav.map((n) => <a href={h(n.id)}>{n.label}</a>)}
+    </nav>
+    <div class="menu__foot">
+      <button class="ubtn" type="button" data-open-unit>
+        <span class="ubtn__t"><small>Unidade</small><b data-u-short>{u ? u.short : 'Escolher'}</b></span>
+        <svg aria-hidden="true"><use href="#chev" /></svg>
+      </button>
+      <a class="btn btn--y" href={wa('menu')} data-wa="menu" data-unit={unit} target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa" /></svg>{CTA.label}</a>
+    </div>
+  </div>
+
+  <main id="conteudo">
+    <slot />
+  </main>
+
+  <footer class="ft">
+    <div class="wrap">
+      <div class="ft__g">
+        <div class="ft__b">
+          <img src="/img/logo-400.png" alt="GOFIT Premium Gym" width="400" height="172" loading="lazy" />
+          <span class="lbl">Treino sério. Padrão premium.</span>
+        </div>
+        {UNIT_ORDER.map((k) => (
+          <div class="ft__u">
+            <b>{UNITS[k].name}</b>
+            <span>{UNITS[k].address} · {UNITS[k].district}</span>
+            <a href={`/${UNITS[k].slug}/`}>Ver unidade</a>
+            <a href={`https://www.instagram.com/${UNITS[k].instagram}/`} target="_blank" rel="noopener">@{UNITS[k].instagram}</a>
+          </div>
+        ))}
+      </div>
+      <div class="ft__bot">
+        <span>© 2026 GOFIT Premium Gym · Sudoeste do Paraná</span>
+        <span>{LEGAL.map((l) => `${l.unit} CNPJ ${l.cnpj}`).join(' · ')}</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="sbar" id="sbar">
+    <button class="ubtn" type="button" data-open-unit aria-label="Escolher unidade"><span class="ubtn__t"><small>Unidade</small><b data-u-short>{u ? u.short : 'Escolher'}</b></span><svg aria-hidden="true"><use href="#chev" /></svg></button>
+    <a class="btn btn--y" href={wa('barra')} data-wa="barra" data-unit={unit} target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa" /></svg>{CTA.label}</a>
+  </div>
+
+  <dialog class="sheet" id="sheet" aria-labelledby="sh-t">
+    <div class="sheet__in">
+      <div class="sheet__h">
+        <h2 id="sh-t">Em qual unidade você vai treinar?</h2>
+        <button class="xbtn" type="button" id="shx" aria-label="Fechar"><svg aria-hidden="true"><use href="#x" /></svg></button>
+      </div>
+      <fieldset class="opts">
+        <legend class="sr">Unidade</legend>
+        {UNIT_ORDER.map((k) => (
+          <label class="opt"><input type="radio" name="su" id={`su-${k}`} value={k} /><span><b>{UNITS[k].name}</b><small>{UNITS[k].address} · {UNITS[k].district}</small></span></label>
+        ))}
+      </fieldset>
+      <div class="prev" id="shprev"><span class="lbl">A mensagem vai pronta</span><span id="shmsg">Escolha a unidade para ver a mensagem.</span></div>
+      <a class="btn btn--y" id="shgo" href="#unidades" target="_blank" rel="noopener" aria-disabled="true"><svg aria-hidden="true"><use href="#wa" /></svg><span id="shgot">Continuar no WhatsApp</span></a>
+    </div>
+  </dialog>
+
+  <script>
+    import '../scripts/site.ts';
+  </script>
+</body>
+</html>

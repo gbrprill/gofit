@@ -1,0 +1,28 @@
+---
+import Pic from './Pic.astro';
+import { CTA } from '../data/site';
+---
+<section class="hero" id="hero" aria-labelledby="hero-t">
+  <Pic base="hero" alt="Barra olímpica carregada sobre piso de borracha, sob luz lateral dura" priority sizes="100vw" cls="hero__img" />
+  <div class="hero__lit" id="lit" aria-hidden="true"><Pic base="hero" alt="" priority sizes="100vw" /></div>
+  <div class="hero__shade"></div>
+  <div class="wrap hero__in">
+    <div class="hero__txt">
+      <div class="hero__h">
+        <h1 id="hero-t"><span>Treino sério.</span><span class="y">Resultado real.</span></h1>
+        <span class="hero__wipe" aria-hidden="true"></span>
+      </div>
+      <p class="lead" data-intro>Centro de treinamento premium em Realeza, Francisco Beltrão e Pato Branco.</p>
+      <div class="hero__cta" data-intro>
+        <a class="btn btn--y btn--lg" href="#unidades" data-wa="hero" target="_blank" rel="noopener" data-magnet><svg aria-hidden="true"><use href="#wa" /></svg>{CTA.label}</a>
+        <a class="btn btn--o btn--lg" href="#seu-treino" data-magnet>Descobrir meu treino<svg class="i-arr" aria-hidden="true"><use href="#arr" /></svg></a>
+      </div>
+    </div>
+    <div class="hero__side" data-intro>
+      <span class="lbl">Desde</span>
+      <b>2016</b>
+      <a class="scue" href="#placar"><i></i><span>Role</span></a>
+    </div>
+  </div>
+  <div class="hero__bar" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</div>
+</section>

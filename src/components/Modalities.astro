@@ -1,0 +1,22 @@
+---
+import ModCard from './ModCard.astro';
+import { MODALITIES } from '../data/site';
+---
+<section class="hs" id="modalidades" aria-labelledby="md-t">
+  <div class="hs__in">
+    <div class="wrap hs__top">
+      <h2 class="h2" id="md-t">Escolha seu <span class="y">treino.</span></h2>
+      <div class="hs__ctl">
+        <span class="hs__count" aria-live="polite"><b id="hsn">01</b> / {String(MODALITIES.length).padStart(2, '0')}</span>
+        <span class="hs__meter" aria-hidden="true"><i id="hsm"></i></span>
+        <button class="hs__nav" type="button" id="hsprev" aria-label="Modalidade anterior"><svg aria-hidden="true"><use href="#arrl" /></svg></button>
+        <button class="hs__nav" type="button" id="hsnext" aria-label="Próxima modalidade"><svg aria-hidden="true"><use href="#arr" /></svg></button>
+      </div>
+    </div>
+    <div class="hs__vp" id="hsvp">
+      <ul class="hs__track" id="hstrack">
+        {MODALITIES.map((m) => <ModCard m={m} />)}
+      </ul>
+    </div>
+  </div>
+</section>

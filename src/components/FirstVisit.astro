@@ -1,0 +1,20 @@
+---
+import { FAQ } from '../data/site';
+---
+<section class="sec pv" id="primeira-vez" aria-labelledby="pv-t">
+  <div class="wrap pv__g">
+    <div class="pv__l">
+      <h2 class="h2" id="pv-t">Primeira vez? <span class="y">É simples.</span></h2>
+      <ol class="steps">
+        <li><span class="sn" aria-hidden="true">1</span><span><b>Escolha a unidade</b><span class="tx">Realeza, Francisco Beltrão ou Pato Branco.</span></span></li>
+        <li><span class="sn" aria-hidden="true">2</span><span><b>Chame no WhatsApp</b><span class="tx">A mensagem vai pronta. A equipe combina o horário com você.</span></span></li>
+        <li><span class="sn" aria-hidden="true">3</span><span><b>Venha conhecer</b><span class="tx">Traga tênis, garrafa e toalha. O resto é com a gente.</span></span></li>
+      </ol>
+    </div>
+    <div class="faq">
+      {FAQ.map((f, i) => (
+        <details open={i === 0}><summary>{f.q}<i aria-hidden="true"></i></summary><div class="ans"><p>{f.a}</p></div></details>
+      ))}
+    </div>
+  </div>
+</section>

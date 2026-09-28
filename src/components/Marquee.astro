@@ -1,0 +1,10 @@
+---
+const items = ['Força', 'Método', 'Disciplina', 'Padrão premium'];
+---
+<div class="mq" data-marquee aria-hidden="true">
+  <div class="mq__track">
+    <div class="mq__grp">
+      {items.map((t) => <span class="mq__it">{t}<svg><use href="#star" /></svg></span>)}
+    </div>
+  </div>
+</div>

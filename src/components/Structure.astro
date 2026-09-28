@@ -1,0 +1,51 @@
+---
+import Pic from './Pic.astro';
+const stars = [0, 1, 2, 3, 4];
+---
+<section class="sec" id="estrutura" aria-labelledby="es-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id="es-t">Equipamento com <span class="y">nome e sobrenome.</span></h2>
+      <p class="lead">Máquinas escolhidas uma a uma e tudo o que você precisa para treinar e seguir o dia.</p>
+    </div>
+    <div class="bento">
+      <a class="bx bx--pan" href="/pato-branco/">
+        <div class="zoom" data-reveal><Pic base="anilha" alt="Anilha e presilha amarela sob luz lateral" sizes="(max-width: 1100px) 100vw, 58vw" /></div>
+        <div class="bx__stack">
+          <span class="bx__where">Panatta · Pato Branco</span>
+          <h3>De Roma para<br />o Sudoeste.</h3>
+          <p>Em 2022, em Roma, o fundador teve o primeiro contato com uma Panatta e prometeu que a GOFIT teria uma. Em julho de 2026, as máquinas italianas chegaram a Pato Branco.</p>
+          <div class="bx__q"><p>“Hoje esse sonho se tornou realidade.”</p></div>
+        </div>
+      </a>
+      <article class="bx bx--rl">
+        <div class="bx__stack">
+          <span class="bx__where">Pato Branco</span>
+          <h3>Real Leader USA</h3>
+          <p>Máquinas guiadas de padrão americano, incluindo a linha dedicada a glúteos.</p>
+        </div>
+        <div class="seal"><span class="seal__bar" aria-hidden="true">{stars.map(() => <svg><use href="#star" /></svg>)}</span><span class="lbl" style="color:#fff">Padrão GOFIT</span></div>
+      </article>
+      <article class="bx bx--park">
+        <span class="bx__big" aria-hidden="true">60</span>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Cerca de 60 vagas</h3><p>Estacionamento próprio.</p></div>
+      </article>
+      <article class="bx bx--vest">
+        <svg class="bx__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-3zM6 12V5a2 2 0 0 1 4 0M8 20l-1 2M16 20l1 2" /></svg>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Vestiário com chuveiro</h3></div>
+      </article>
+      <article class="bx bx--av">
+        <svg class="bx__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Avaliação física</h3><p>Você começa com avaliação e sai com o treino montado para você.</p></div>
+      </article>
+      <article class="bx bx--aroma">
+        <svg class="bx__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3c0 3 3 3 3 6s-3 3-3 6M14 3c0 3 3 3 3 6s-3 3-3 6M5 21h14" /></svg>
+        <div class="bx__stack"><span class="bx__where">Realeza</span><h3>Aroma da casa</h3><p>A unidade tem marketing olfativo. Dá para reconhecer a GOFIT de olhos fechados.</p></div>
+      </article>
+      <a class="bx bx--func" href="/francisco-beltrao/">
+        <div class="zoom"><Pic base="kettlebells" alt="Kettlebells na área funcional" sizes="(max-width: 1100px) 100vw, 33vw" /></div>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Área funcional</h3></div>
+      </a>
+    </div>
+  </div>
+</section>

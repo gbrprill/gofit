@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import ModCard from '../components/ModCard.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { UNITS, UNIT_ORDER, MODALITIES, CTA, waHref, mapsHref, type UnitKey } from '../data/site';
+
+export function getStaticPaths() {
+  return (['rz', 'fb', 'pb'] as UnitKey[]).map((k) => ({ params: { unidade: UNITS[k].slug }, props: { k } }));
+}
+const { k } = Astro.props as { k: UnitKey };
+const u = UNITS[k];
+const mods = MODALITIES.filter((m) => m.units.includes(k));
+const others = UNIT_ORDER.filter((x) => x !== k);
+const storyImg = k === 'pb' ? 'anilha' : k === 'fb' ? 'kettlebells' : 'halter';
+const site = Astro.site!.toString().replace(/\/$/, '');
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ExerciseGym',
+  '@id': `${site}/${u.slug}/#gym`,
+  name: `GOFIT ${u.name}`,
+  url: `${site}/${u.slug}/`,
+  image: `${site}/img/og.jpg`,
+  parentOrganization: { '@type': 'Organization', name: 'GOFIT Premium Gym', url: `${site}/` },
+  address: { '@type': 'PostalAddress', streetAddress: u.address, addressLocality: u.city, addressRegion: 'PR', postalCode: u.cep, addressCountry: 'BR' },
+  sameAs: `https://www.instagram.com/${u.instagram}/`,
+};
+---
+<Base title={u.seoTitle} description={u.seoDescription} unit={k} ld={ld}>
+  <section class="hero hero--unit" id="hero" aria-labelledby="hero-t">
+    <Pic base="hero" alt="" priority sizes="100vw" cls="hero__img" />
+    <div class="hero__lit" id="lit" aria-hidden="true"><Pic base="hero" alt="" priority sizes="100vw" /></div>
+    <div class="hero__shade"></div>
+    <div class="wrap hero__in">
+      <div class="hero__txt">
+        <a class="crumb" href="/#unidades" data-intro><svg aria-hidden="true"><use href="#arrl" /></svg>Todas as unidades</a>
+        <div class="hero__h">
+          <h1 id="hero-t"><span class="sr">GOFIT </span>{u.name}</h1>
+          <span class="hero__wipe" aria-hidden="true"></span>
+        </div>
+        <p class="hero__meta" data-intro><b>{u.role}</b><span>Desde {u.since}</span><span>{u.address} · {u.district}</span></p>
+        <p class="lead" data-intro>{u.quote}</p>
+        <div class="hero__cta" data-intro>
+          <a class="btn btn--y btn--lg" href={waHref(k, CTA.message(u.name), 'hero')} data-wa="hero" data-unit={k} target="_blank" rel="noopener" data-magnet><svg aria-hidden="true"><use href="#wa" /></svg>Falar com {u.short}</a>
+          <a class="btn btn--o btn--lg" href={mapsHref(k)} target="_blank" rel="noopener" data-magnet>Como chegar<svg class="i-arr" aria-hidden="true"><use href="#ext" /></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero__bar" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</div>
+  </section>
+
+  <section class="sec" aria-labelledby="st-t">
+    <div class="wrap story">
+      <div class="story__img zoom" data-reveal><Pic base={storyImg} alt="" sizes="(max-width: 900px) 100vw, 50vw" /></div>
+      <div class="story__txt">
+        <h2 class="h2" id="st-t">{u.story.title}</h2>
+        <p class="lead">{u.story.text}</p>
+        <ul class="hl">
+          {u.highlights.map((h) => <li><svg aria-hidden="true"><use href="#tri" /></svg>{h}</li>)}
+        </ul>
+        <dl class="dl">
+          <div><dt>Endereço</dt><dd>{u.address} · {u.district} · {u.city}/PR</dd></div>
+          {u.hours && <div><dt>Horário</dt><dd>{u.hours}</dd></div>}
+          <div><dt>Instagram</dt><dd><a href={`https://www.instagram.com/${u.instagram}/`} target="_blank" rel="noopener">@{u.instagram}</a> · {u.followers} seguidores</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec mt" aria-labelledby="md-t">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="h2" id="md-t">Treinos <span class="y">nesta unidade.</span></h2>
+        <p class="lead">Toque em um treino para chamar a equipe de {u.short} já falando dele.</p>
+      </div>
+      <ul class="mods-grid">
+        {mods.map((m) => <ModCard m={m} unit={k} />)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="ot-t">
+    <div class="wrap">
+      <div class="sec-head"><h2 class="h2" id="ot-t">Outras <span class="y">unidades.</span></h2></div>
+      <div class="others">
+        {others.map((o) => (
+          <a class="other" href={`/${UNITS[o].slug}/`}><span>{UNITS[o].role} · desde {UNITS[o].since}</span><b>{UNITS[o].name}</b><span>{UNITS[o].address}</span><svg aria-hidden="true"><use href="#ext" /></svg></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FinalCta unit={k} />
+</Base>

@@ -1,0 +1,12 @@
+---
+// Número em display de 7 segmentos, como o cronômetro de parede de um CT.
+interface Props { value: number; pad?: number; from?: number; suffix?: string; white?: boolean }
+const { value, pad = 0, from = 0, suffix, white = false } = Astro.props;
+const str = String(value).padStart(pad, '0');
+---
+<span class:list={['digits', { 'digits--w': white }]} data-count={value} data-from={from} data-pad={pad || str.length} aria-hidden="true">
+  {str.split('').map((d) => (
+    <span class="seg" data-d={d}><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><i class="e"></i><i class="f"></i><i class="g"></i></span>
+  ))}
+  {suffix && <small>{suffix}</small>}
+</span>

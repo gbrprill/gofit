@@ -1,0 +1,29 @@
+---
+import { UNITS, UNIT_ORDER, POSTS, COMMENTS } from '../data/site';
+---
+<section class="sec" id="comunidade" aria-labelledby="cm-t" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id="cm-t">A GOFIT <span class="y">por dentro.</span></h2>
+      <p class="lead">Chegada de equipamento, bastidores e o dia a dia das três unidades.</p>
+    </div>
+    <div class="com__g">
+      {UNIT_ORDER.map((k) => (
+        <a class="ig" href={`https://www.instagram.com/${UNITS[k].instagram}/`} target="_blank" rel="noopener">
+          <span class="ig__top"><span class="ig__u">{UNITS[k].name}</span><svg aria-hidden="true"><use href="#ig" /></svg></span>
+          <span class="ig__n">{UNITS[k].followers.replace(' mil', '')}<small>MIL</small></span>
+          <span class="ig__h">@{UNITS[k].instagram}</span>
+        </a>
+      ))}
+      <ul class="posts">
+        {POSTS.map((p) => (
+          <li><a class="post" href={p.url} target="_blank" rel="noopener"><span class="d">{p.date}</span><span class="u">{p.unit}</span><span class="t">{p.title}</span><svg aria-hidden="true"><use href="#ext" /></svg></a></li>
+        ))}
+      </ul>
+      <figure class="side-card">
+        <blockquote>{COMMENTS.map((c) => <p>“{c}”</p>)}</blockquote>
+        <figcaption>Comentários de alunos no Instagram da GOFIT.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
