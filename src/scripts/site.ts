@@ -198,6 +198,7 @@ if (hero && lit && !RM) {
 /* ============ hero: vídeo em tríptico ============ */
 const reel = $$<HTMLVideoElement>('.hero__strip video');
 const playBtn = $<HTMLButtonElement>('#heroplay');
+const HERO_RATE = 0.6;
 if (hero && reel.length) {
   const strips = $$('.hero__strip', hero);
   const mobile = matchMedia('(max-width: 760px)');
@@ -213,6 +214,10 @@ if (hero && reel.length) {
     v.addEventListener('playing', () => v.classList.add('on'), { once: true });
     v.preload = 'auto';
     v.src = mobile.matches ? '/video/hero-540.mp4' : '/video/hero-720.mp4';
+    // Mais lento que o original, para a filmagem respirar.
+    v.defaultPlaybackRate = HERO_RATE;
+    v.playbackRate = HERO_RATE;
+    v.addEventListener('play', () => { v.playbackRate = HERO_RATE; });
   };
   const sync = () => {
     reel.forEach((v, i) => {
@@ -277,7 +282,7 @@ if (bxs.length && !RM) {
   const GAP = 0.8;
   let nextAt = 0;
   ScrollTrigger.batch(bxs, {
-    start: 'top 88%', once: true,
+    start: 'top+=30% bottom', once: true,
     onEnter: (els) => {
       (els as HTMLElement[]).sort((x, y) => bxs.indexOf(x) - bxs.indexOf(y)).forEach((el) => {
         const now = performance.now() / 1000;
@@ -435,6 +440,28 @@ if (hs && track && vp) {
   $('#hsnext')?.addEventListener('click', () => go(1));
 }
 
+/* ============ modalidades: os cartões entram flutuando pela lateral ao chegar na seção ============ */
+if (hs && track && !RM) {
+  const mcs = $$('.mc', track);
+  gsap.set(mcs, { x: 180, autoAlpha: 0 });
+  ScrollTrigger.create({
+    trigger: hs, start: 'top 65%', once: true,
+    onEnter: () => gsap.to(mcs, { x: 0, autoAlpha: 1, duration: 1.4, stagger: 0.14, ease: 'expo.out', clearProps: 'x' }),
+  });
+}
+
+/* ============ seções se revelam com a rolagem ============ */
+if (!RM) {
+  // Cabeçalhos: cada linha sobe e aparece, uma depois da outra.
+  $$('.sec-head, .qz__intro, .hs__top, .pv__l, .fin__in, .story__txt').forEach((g) => {
+    gsap.from(g.children, { y: 40, autoAlpha: 0, duration: 1, stagger: 0.1, ease: 'expo.out', clearProps: 'transform', scrollTrigger: { trigger: g, start: 'top 86%', once: true } });
+  });
+  // Blocos de conteúdo: sobem juntos logo depois do cabeçalho.
+  $$('.un__g, .com__g, .qz, .vb__panel, .faq, .others, .mods-grid').forEach((b) => {
+    gsap.from(b, { y: 60, autoAlpha: 0, duration: 1.1, ease: 'expo.out', clearProps: 'transform', scrollTrigger: { trigger: b, start: 'top 88%', once: true } });
+  });
+}
+
 /* ============ tilt + magnetic (fine pointers only) ============ */
 if (FINE && !RM) {
   $$('[data-tilt]').forEach((c) => {
@@ -590,5 +617,8 @@ if (upanel) {
 /* ============ resize ============ */
 let rzT: number | undefined;
 addEventListener('resize', () => { clearTimeout(rzT); rzT = window.setTimeout(sizeCv, 150); });
-addEventListener('load', () => ScrollTrigger.refresh());
-document.fonts?.ready.then(() => ScrollTrigger.refresh());
+// Gatilhos criados fora da ordem da página (pins mais abaixo, componentes) são ordenados antes de recalcular.
+const refreshAll = () => { ScrollTrigger.sort(); ScrollTrigger.refresh(); };
+refreshAll();
+addEventListener('load', refreshAll);
+document.fonts?.ready.then(refreshAll);
