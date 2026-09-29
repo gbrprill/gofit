@@ -1,0 +1,57 @@
+---
+import Pic from './Pic.astro';
+import { UNITS, CTA, waHref, mapsHref, type UnitKey } from '../data/site';
+// Abertura da página de unidade: foto padrão ou vídeo vertical da unidade ao lado do título.
+interface Props { k: UnitKey; video?: boolean }
+const { k, video = false } = Astro.props;
+const u = UNITS[k];
+const aerial = video;
+---
+<section class:list={['hero', 'hero--unit', { 'hero--air': aerial }]} id="hero" aria-labelledby="hero-t">
+  {aerial ? (
+    <div class="hero__air" aria-hidden="true">
+      <video class="hero__airbg" muted loop playsinline preload="none" poster={`/img/${k}-tour-poster-720.webp`} data-src={`/video/${k}-tour-720.mp4`} data-auto></video>
+    </div>
+  ) : (
+    <>
+      <Pic base="hero" alt="" priority sizes="100vw" cls="hero__img" />
+      <div class="hero__lit" id="lit" aria-hidden="true"><Pic base="hero" alt="" priority sizes="100vw" /></div>
+    </>
+  )}
+  <div class="hero__shade"></div>
+  <div class="wrap hero__in">
+    <div class="hero__txt">
+      <a class="crumb" href="/#unidades" data-intro><svg aria-hidden="true"><use href="#arrl" /></svg>Todas as unidades</a>
+      <div class="hero__h">
+        <h1 id="hero-t"><span class="sr">GOFIT </span>{u.name}</h1>
+        <span class="hero__wipe" aria-hidden="true"></span>
+      </div>
+      <p class="hero__meta" data-intro><b>{u.role}</b><span>Desde {u.since}</span><span>{u.address} · {u.district}</span></p>
+      <p class="lead" data-intro>{u.quote}</p>
+      <div class="hero__cta" data-intro>
+        <a class="btn btn--y btn--lg" href={waHref(k, CTA.message(u.name), 'hero')} data-wa="hero" data-unit={k} target="_blank" rel="noopener" data-magnet><svg aria-hidden="true"><use href="#wa" /></svg>Falar com {u.short}</a>
+        <a class="btn btn--o btn--lg" href={mapsHref(k)} target="_blank" rel="noopener" data-magnet>Como chegar<svg class="i-arr" aria-hidden="true"><use href="#ext" /></svg></a>
+      </div>
+    </div>
+  </div>
+  {aerial && (
+    <button class="hero__play" type="button" data-airplay aria-label="Pausar vídeo">
+      <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+      <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" /></svg>
+    </button>
+  )}
+  <div class="hero__bar" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</div>
+</section>
+
+<script>
+  // Pausa e retoma o vídeo da abertura. data-hold impede que a rolagem volte a tocar.
+  document.querySelectorAll<HTMLButtonElement>('[data-airplay]').forEach((btn) => {
+    const vids = Array.from(btn.closest('.hero')!.querySelectorAll<HTMLVideoElement>('.hero__air video'));
+    btn.addEventListener('click', () => {
+      const hold = !btn.classList.contains('is-paused');
+      btn.classList.toggle('is-paused', hold);
+      btn.setAttribute('aria-label', hold ? 'Reproduzir vídeo' : 'Pausar vídeo');
+      vids.forEach((v) => { if (hold) { v.dataset.hold = '1'; v.pause(); } else { delete v.dataset.hold; if (v.src && v.offsetParent) v.play().catch(() => {}); } });
+    });
+  });
+</script>

@@ -1,0 +1,86 @@
+---
+// Método em régua vertical: régua fixa à esquerda, o ponteiro desce e os passos trocam no palco
+// (o lido sobe, o próximo vem de baixo). Número e título acendem quando o passo é o atual.
+const id = 'metodo';
+const steps = [
+  { n: '01', t: 'Avaliação', p: 'Entender de onde você parte: objetivo, histórico e condição física.' },
+  { n: '02', t: 'Plano', p: 'Treino montado para o seu objetivo, seja hipertrofia, emagrecimento ou condicionamento.' },
+  { n: '03', t: 'Execução', p: 'Técnica corrigida no salão e carga ajustada conforme você evolui.' },
+  { n: '04', t: 'Reavaliação', p: 'Medir de novo. O que funcionou fica, o que travou muda.' },
+];
+const SUB = 10; // risquinhos entre duas medidas
+const total = (steps.length - 1) * SUB;
+const ticks = Array.from({ length: total + 1 }, (_, i) => ({ i, major: i % SUB === 0, half: i % SUB === SUB / 2, n: i % SUB === 0 ? steps[i / SUB].n : '' }));
+const hid = `${id}-t`;
+---
+<section class="sec mr mr--marker" id={id} aria-labelledby={hid} data-mr>
+  <div class="mr__pin">
+    <div class="wrap mr__in">
+      <div class="sec-head mr__head">
+        <h2 class="h2" id={hid}>Treino com <span class="y">direção.</span></h2>
+        <p class="lead">Treinar pesado é o básico. O que muda o resultado é saber por que cada carga está na barra.</p>
+      </div>
+
+      <div class="mr__stage">
+        <div class="mr__rule" aria-hidden="true">
+          <span class="mr__rail"><i class="mr__fill"></i></span>
+          {ticks.map((t) => (
+            <span class:list={['mr__tick', { 'is-major': t.major, 'is-half': t.half }]} style={`--at:${(t.i / total) * 100}%`} data-at={t.i / total}>
+              {t.major && <b>{t.n}</b>}
+            </span>
+          ))}
+          <span class="mr__ptr"><i></i></span>
+        </div>
+        <ol class="mr__steps">
+          {steps.map((s) => (
+            <li class="mr__step"><span class="mr__n" aria-hidden="true">{s.n}</span><div class="mr__tx"><h3>{s.t}</h3><p>{s.p}</p></div></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-mr]').forEach((sec) => {
+    if (RM) { sec.querySelectorAll('.mr__step').forEach((s) => s.classList.add('on')); return; }
+    const pin = sec.querySelector<HTMLElement>('.mr__pin')!;
+    const steps = Array.from(sec.querySelectorAll<HTMLElement>('.mr__step'));
+    const n = steps.length;
+    sec.classList.add('live');
+    const light = (p: number) => {
+      const idx = Math.round(p * (n - 1));
+      steps.forEach((s, i) => { s.classList.toggle('on', i === idx); s.classList.toggle('past', i < idx); });
+      sec.querySelectorAll<HTMLElement>('.mr__tick').forEach((t, i) => {
+        const at = t.dataset.at != null ? Number(t.dataset.at) : NaN;
+        if (!Number.isNaN(at)) t.classList.toggle('lit', at <= p + 0.001);
+      });
+    };
+
+    const tl = gsap.timeline({ defaults: { ease: 'none' } });
+    const ptr = sec.querySelector<HTMLElement>('.mr__ptr')!;
+    const fill = sec.querySelector<HTMLElement>('.mr__fill')!;
+    gsap.set(steps, { yPercent: 60, autoAlpha: 0 });
+    gsap.set(steps[0], { yPercent: 0, autoAlpha: 1 });
+    tl.fromTo(ptr, { top: '0%' }, { top: '100%', duration: n - 1 }, 0)
+      .fromTo(fill, { scaleY: 0 }, { scaleY: 1, duration: n - 1 }, 0);
+    for (let i = 1; i < n; i++) {
+      // o passo lido sobe e some; o próximo vem de baixo
+      tl.to(steps[i - 1], { yPercent: -60, autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, i - 0.55)
+        .to(steps[i], { yPercent: 0, autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, i - 0.4);
+    }
+
+    ScrollTrigger.create({
+      trigger: sec, pin, start: 'top top', end: () => `+=${innerHeight * 0.8 * (n - 1)}`,
+      animation: tl, scrub: 0.5, invalidateOnRefresh: true, anticipatePin: 1, refreshPriority: -1,
+      snap: { snapTo: 1 / (n - 1), directional: false, inertia: false, duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: 'power2.inOut' },
+      onUpdate: (s) => light(s.progress),
+    });
+    light(0);
+  });
+</script>

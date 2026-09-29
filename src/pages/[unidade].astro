@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Pic from '../components/Pic.astro';
+import UnitHero from '../components/UnitHero.astro';
 import ModCard from '../components/ModCard.astro';
 import FinalCta from '../components/FinalCta.astro';
 import { UNITS, UNIT_ORDER, MODALITIES, CTA, waHref, mapsHref, type UnitKey } from '../data/site';
@@ -12,7 +13,7 @@ const { k } = Astro.props as { k: UnitKey };
 const u = UNITS[k];
 const mods = MODALITIES.filter((m) => m.units.includes(k));
 const others = UNIT_ORDER.filter((x) => x !== k);
-const storyImg = k === 'pb' ? 'anilha' : k === 'fb' ? 'kettlebells' : 'halter';
+const storyImg = k === 'fb' ? 'funcional' : 'halter';
 const site = Astro.site!.toString().replace(/\/$/, '');
 const ld = {
   '@context': 'https://schema.org',
@@ -27,31 +28,13 @@ const ld = {
 };
 ---
 <Base title={u.seoTitle} description={u.seoDescription} unit={k} ld={ld}>
-  <section class="hero hero--unit" id="hero" aria-labelledby="hero-t">
-    <Pic base="hero" alt="" priority sizes="100vw" cls="hero__img" />
-    <div class="hero__lit" id="lit" aria-hidden="true"><Pic base="hero" alt="" priority sizes="100vw" /></div>
-    <div class="hero__shade"></div>
-    <div class="wrap hero__in">
-      <div class="hero__txt">
-        <a class="crumb" href="/#unidades" data-intro><svg aria-hidden="true"><use href="#arrl" /></svg>Todas as unidades</a>
-        <div class="hero__h">
-          <h1 id="hero-t"><span class="sr">GOFIT </span>{u.name}</h1>
-          <span class="hero__wipe" aria-hidden="true"></span>
-        </div>
-        <p class="hero__meta" data-intro><b>{u.role}</b><span>Desde {u.since}</span><span>{u.address} · {u.district}</span></p>
-        <p class="lead" data-intro>{u.quote}</p>
-        <div class="hero__cta" data-intro>
-          <a class="btn btn--y btn--lg" href={waHref(k, CTA.message(u.name), 'hero')} data-wa="hero" data-unit={k} target="_blank" rel="noopener" data-magnet><svg aria-hidden="true"><use href="#wa" /></svg>Falar com {u.short}</a>
-          <a class="btn btn--o btn--lg" href={mapsHref(k)} target="_blank" rel="noopener" data-magnet>Como chegar<svg class="i-arr" aria-hidden="true"><use href="#ext" /></svg></a>
-        </div>
-      </div>
-    </div>
-    <div class="hero__bar" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</div>
-  </section>
+  <UnitHero k={k} video={k !== 'rz'} />
 
   <section class="sec" aria-labelledby="st-t">
     <div class="wrap story">
-      <div class="story__img zoom" data-reveal><Pic base={storyImg} alt="" sizes="(max-width: 900px) 100vw, 50vw" /></div>
+      {k === 'pb'
+        ? <div class="story__img zoom" data-reveal><video muted loop playsinline preload="none" poster="/img/panatta-poster-720.webp" data-src="/video/panatta-720.mp4" data-auto aria-label="Máquinas Panatta na unidade Pato Branco"></video></div>
+        : <div class="story__img zoom" data-reveal><Pic base={storyImg} alt="" sizes="(max-width: 900px) 100vw, 50vw" /></div>}
       <div class="story__txt">
         <h2 class="h2" id="st-t">{u.story.title}</h2>
         <p class="lead">{u.story.text}</p>

@@ -1,0 +1,124 @@
+---
+import { UNITS, UNIT_ORDER } from '../data/site';
+// Monte sua primeira visita: o momento de treino, onde, quando, com quem e o que quer ver.
+// No fim, a mensagem pronta chega qualificada ao WhatsApp da unidade.
+interface Props { id?: string }
+const { id = 'primeira-visita' } = Astro.props;
+const extras: Record<string, string[]> = { rz: [], fb: ['Avaliação física'], pb: [] };
+const units = UNIT_ORDER.map((k) => ({ k, name: UNITS[k].name, see: [...UNITS[k].mods, ...extras[k], 'Planos e horários'] }));
+const moments = [
+  { v: 'zero', t: 'Nunca treinei', s: 'Quero começar certo.', msg: 'nunca treinei e quero começar do jeito certo' },
+  { v: 'volta', t: 'Estou voltando', s: 'Parei faz um tempo.', msg: 'estou voltando a treinar depois de um tempo parado' },
+  { v: 'evolui', t: 'Quero evoluir', s: 'Sinto que estagnei.', msg: 'já treino e quero sair do lugar' },
+  { v: 'intenso', t: 'Quero intensificar', s: 'Quero mais desafio.', msg: 'tenho base e quero treinar com mais intensidade' },
+];
+const check = '<svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>';
+---
+<section class="sec vb" id={id} aria-labelledby={`${id}-t`} data-vb={JSON.stringify({ units, moments })}>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id={`${id}-t`}>Monte sua <span class="y">primeira visita.</span></h2>
+      <p class="lead">Cinco toques e a mensagem sai pronta para a unidade.</p>
+    </div>
+    <div class="vb__panel">
+      <div class="vb__form">
+        <fieldset class="vb__f"><legend><b>01</b>Seu momento</legend>
+          <div class="vb__chips vb__mo" data-k="moment">
+            {moments.map((m) => <button type="button" class="chip mo" data-v={m.v} aria-pressed="false"><Fragment set:html={check} /><span class="mo__t">{m.t}</span><span class="mo__s">{m.s}</span></button>)}
+          </div>
+        </fieldset>
+        <fieldset class="vb__f"><legend><b>02</b>Unidade</legend>
+          <div class="vb__chips" data-k="unit">{units.map((u) => <button type="button" class="chip" data-v={u.k} aria-pressed="false"><Fragment set:html={check} />{u.name}</button>)}</div>
+        </fieldset>
+        <div class="vb__row">
+          <fieldset class="vb__f"><legend><b>03</b>Período</legend>
+            <div class="vb__chips" data-k="when">{['Manhã', 'Tarde', 'Noite'].map((w) => <button type="button" class="chip" data-v={w} aria-pressed="false"><Fragment set:html={check} />{w}</button>)}</div>
+          </fieldset>
+          <fieldset class="vb__f"><legend><b>04</b>Você vem</legend>
+            <div class="vb__chips" data-k="who">{[['so', 'Sozinho(a)'], ['par', 'Com alguém']].map(([v, t]) => <button type="button" class="chip" data-v={v} aria-pressed="false"><Fragment set:html={check} />{t}</button>)}</div>
+          </fieldset>
+        </div>
+        <fieldset class="vb__f"><legend><b>05</b>Quer conhecer</legend>
+          <div class="vb__chips" data-k="see" data-multi><span class="vb__empty">Escolha a unidade primeiro.</span></div>
+        </fieldset>
+      </div>
+      <div class="vb__ticket">
+        <span class="lbl vb__tl">Sua mensagem</span>
+        <p class="vb__bubble" data-o="msg" aria-live="polite">Ela aparece aqui conforme você escolhe.</p>
+        <a class="btn btn--y vb__go" href="#unidades" target="_blank" rel="noopener" aria-disabled="true"><svg aria-hidden="true"><use href="#wa" /></svg><span>Escolha a unidade para enviar</span></a>
+        <p class="vb__note">Abre o WhatsApp da unidade. Você revisa antes de mandar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { UNITS, waHref, type UnitKey } from '../data/site';
+  type Data = { units: { k: UnitKey; see: string[] }[]; moments: { v: string; t: string; msg: string }[] };
+  const CHECK = '<svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>';
+  document.querySelectorAll<HTMLElement>('[data-vb]').forEach((sec) => {
+    const { units, moments } = JSON.parse(sec.dataset.vb!) as Data;
+    const st: { moment: string | null; unit: UnitKey | null; when: string | null; who: string | null; see: string[] } = { moment: null, unit: null, when: null, who: null, see: [] };
+    const out = (k: string) => sec.querySelector<HTMLElement>(`[data-o="${k}"]`)!;
+    const go = sec.querySelector<HTMLAnchorElement>('.vb__go')!;
+    const goTx = go.querySelector('span')!;
+    const seeBox = sec.querySelector<HTMLElement>('[data-k="see"]')!;
+    const list = (a: string[]) => (a.length < 2 ? a.join('') : `${a.slice(0, -1).join(', ')} e ${a[a.length - 1]}`);
+    const seeText = (a: string[]) => list(a.map((s) => (s === 'Planos e horários' ? 'planos e horários' : s.toLowerCase())));
+    const render = () => {
+      const mo = moments.find((m) => m.v === st.moment);
+      const parts = [`Oi! Quero agendar minha primeira visita${st.unit ? ` na GOFIT ${UNITS[st.unit].name}` : ''}.`];
+      if (mo) parts.push(`Sobre mim: ${mo.msg}.`);
+      if (st.when) parts.push(`Melhor período: ${st.when.toLowerCase()}.`);
+      if (st.who) parts.push(st.who === 'so' ? 'Vou sozinho(a).' : 'Vou levar mais alguém.');
+      const vis = st.see.filter((s) => s !== 'Planos e horários');
+      const plans = st.see.includes('Planos e horários');
+      if (vis.length) parts.push(`Quero conhecer ${seeText(vis)}${plans ? ' e saber sobre planos e horários' : ''}.`);
+      else if (plans) parts.push('Quero saber sobre planos e horários.');
+      const msg = parts.join(' ');
+      const any = !!(mo || st.unit || st.when || st.who);
+      out('msg').textContent = any ? msg : 'Ela aparece aqui conforme você escolhe.';
+      if (!st.unit) { go.setAttribute('aria-disabled', 'true'); go.href = '#unidades'; goTx.textContent = 'Escolha a unidade para enviar'; return; }
+      go.removeAttribute('aria-disabled');
+      goTx.textContent = 'Mandar no WhatsApp';
+      go.setAttribute('aria-label', `Mandar mensagem no WhatsApp da GOFIT ${UNITS[st.unit].name}`);
+      go.href = waHref(st.unit, msg, 'primeira-visita');
+    };
+    const fillSee = () => {
+      const u = units.find((x) => x.k === st.unit);
+      st.see = [];
+      seeBox.innerHTML = '';
+      u?.see.forEach((s) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.dataset.v = s; b.setAttribute('aria-pressed', 'false');
+        b.innerHTML = CHECK;
+        b.append(s);
+        seeBox.appendChild(b);
+      });
+    };
+    sec.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('.chip');
+      if (b) {
+        const box = b.parentElement!;
+        const k = box.dataset.k as 'moment' | 'unit' | 'when' | 'who' | 'see';
+        if (box.hasAttribute('data-multi')) {
+          b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+          st.see = Array.from(box.querySelectorAll<HTMLElement>('.chip[aria-pressed="true"]')).map((x) => x.dataset.v!);
+        } else {
+          box.querySelectorAll('.chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+          (st as Record<string, unknown>)[k] = b.dataset.v;
+          if (k === 'unit') fillSee();
+        }
+        render();
+        return;
+      }
+      if ((e.target as HTMLElement).closest('.vb__go[aria-disabled]')) {
+        e.preventDefault();
+        sec.querySelector<HTMLButtonElement>('[data-k="unit"] .chip')?.focus();
+      }
+    });
+    // Na página de uma unidade, ela já vem escolhida.
+    const pageUnit = document.body.dataset.unit as UnitKey | undefined;
+    if (pageUnit) sec.querySelector<HTMLButtonElement>(`[data-k="unit"] [data-v="${pageUnit}"]`)?.click();
+  });
+</script>

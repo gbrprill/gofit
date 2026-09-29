@@ -1,13 +1,13 @@
 ---
 import { CTA, UNITS, waHref, type UnitKey } from '../data/site';
-interface Props { unit?: UnitKey }
-const { unit } = Astro.props;
+interface Props { unit?: UnitKey; lines?: string[]; long?: boolean }
+const { unit, lines = ['Você não precisa', 'começar sozinho.'], long = false } = Astro.props;
 const href = unit ? waHref(unit, CTA.message(UNITS[unit].name), 'final') : '#unidades';
 ---
 <section class="fin" id="agendar" aria-labelledby="fn-t">
   <div class="fin__deco" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap fin__in">
-    <h2 id="fn-t">Passa o giz.<br />Pega a barra.<br />Vai.</h2>
+    <h2 id="fn-t" class:list={{ 'fin__h--long': long }}>{lines.map((l, i) => <>{l}{i < lines.length - 1 && <br />}</>)}</h2>
     <div class="fin__r">
       <a class="btn btn--k btn--lg" href={href} data-wa="final" data-unit={unit} target="_blank" rel="noopener" data-magnet><svg aria-hidden="true"><use href="#wa" /></svg>{unit ? `Falar com ${UNITS[unit].short}` : CTA.label}</a>
       <p>{unit ? `${UNITS[unit].address} · ${UNITS[unit].district}` : 'Escolha a unidade e fale direto com a equipe.'}</p>

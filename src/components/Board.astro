@@ -1,11 +1,13 @@
 ---
 import Seg from './Seg.astro';
+interface Props { font?: boolean; id?: string }
+const { font = false, id = 'placar' } = Astro.props;
 ---
-<section class="board" id="placar" aria-label="GOFIT em números: 3 unidades, primeira unidade em 2016, cerca de 60 vagas de estacionamento em Francisco Beltrão e 16 mil seguidores no Instagram.">
+<section class="board" id={id} aria-label="GOFIT em números: 3 unidades, primeira unidade em 2016, cerca de 60 vagas de estacionamento em Francisco Beltrão e 16 mil seguidores no Instagram.">
   <div class="wrap board__g">
-    <div class="cell"><Seg value={3} pad={2} /><span class="cell__l">Unidades no Sudoeste do Paraná</span></div>
-    <div class="cell"><Seg value={2016} from={2000} white /><span class="cell__l">Ano da primeira unidade, em Realeza</span></div>
-    <div class="cell"><Seg value={60} white /><span class="cell__l">Vagas de estacionamento em F. Beltrão</span></div>
-    <div class="cell"><Seg value={16} white suffix="MIL" /><span class="cell__l">Seguidores somados no Instagram</span></div>
+    <div class="cell"><Seg value={3} pad={2} font={font} /><span class="cell__l">Unidades no Sudoeste do Paraná</span></div>
+    <div class="cell"><Seg value={2016} from={2000} white font={font} /><span class="cell__l">Ano da primeira unidade, em Realeza</span></div>
+    <div class="cell"><Seg value={60} white font={font} /><span class="cell__l">Vagas de estacionamento em F. Beltrão</span></div>
+    <div class="cell"><Seg value={16} white suffix="MIL" font={font} /><span class="cell__l">Seguidores somados no Instagram</span></div>
   </div>
 </section>

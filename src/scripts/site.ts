@@ -256,6 +256,53 @@ if (!FINE && 'IntersectionObserver' in window) {
   $$('.mc, .bx').forEach((c) => { if ($('.zoom', c)) io.observe(c); });
 }
 
+/* ============ estrutura: cartões se revelam com o amarelo, depois o preto, depois a foto ============ */
+const bxs = $$('.bento .bx');
+if (bxs.length && !RM) {
+  bxs.forEach((c) => {
+    c.classList.add('rv-pre');
+    c.insertAdjacentHTML('beforeend', '<i class="rv rv--y" aria-hidden="true"></i><i class="rv rv--k" aria-hidden="true"></i>');
+  });
+  const reveal = (c: HTMLElement, delay: number) => {
+    const y = $('.rv--y', c), k = $('.rv--k', c), media = $$(':scope > .zoom :is(img, video)', c);
+    gsap.timeline({ delay })
+      .to(y, { scaleX: 1, duration: 0.42, ease: 'power3.inOut' })
+      .to(k, { scaleX: 1, duration: 0.42, ease: 'power3.inOut' }, '-=0.24')
+      .add(() => { c.classList.remove('rv-pre'); y?.remove(); })
+      .set(k, { transformOrigin: 'right center' })
+      .fromTo(media, { scale: 1.18 }, { scale: 1, duration: 1.1, ease: 'expo.out', clearProps: 'transform' })
+      .to(k, { scaleX: 0, duration: 0.55, ease: 'power3.inOut', onComplete: () => k?.remove() }, '<');
+  };
+  // Um cartão por vez, na ordem de leitura: cada um começa 0,8 s depois do anterior.
+  const GAP = 0.8;
+  let nextAt = 0;
+  ScrollTrigger.batch(bxs, {
+    start: 'top 88%', once: true,
+    onEnter: (els) => {
+      (els as HTMLElement[]).sort((x, y) => bxs.indexOf(x) - bxs.indexOf(y)).forEach((el) => {
+        const now = performance.now() / 1000;
+        const at = Math.max(now, nextAt);
+        nextAt = at + GAP;
+        reveal(el, at - now);
+      });
+    },
+  });
+}
+
+/* ============ vídeos de cartão: carregam perto da tela e só tocam visíveis ============ */
+const autoVids = $$<HTMLVideoElement>('video[data-auto]');
+if (autoVids.length && 'IntersectionObserver' in window) {
+  const saveData = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target as HTMLVideoElement;
+    if (e.isIntersecting) {
+      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; }
+      if (!RM && !saveData && !v.dataset.hold) v.play().catch(() => {});
+    } else if (!v.paused) v.pause();
+  }), { rootMargin: '200px 0px' });
+  autoVids.forEach((v) => io.observe(v));
+}
+
 /* ============ header, progress, sticky bar ============ */
 const prog = $('#prog');
 const sbar = $('#sbar');
@@ -307,20 +354,28 @@ $$('[data-marquee]').forEach((m) => {
 function setDigits(el: HTMLElement, v: number) {
   const pad = Number(el.dataset.pad || 0);
   const s = String(Math.round(v)).padStart(pad, '0').slice(-pad);
+  const num = $('.dnum', el);
+  if (num) { num.textContent = s; return; }
   $$('.seg', el).forEach((seg, i) => { seg.dataset.d = s[i] ?? '0'; });
 }
-$$('[data-count]').forEach((el) => {
-  if (RM) return;
-  const to = Number(el.dataset.count), from = Number(el.dataset.from || 0);
+// Um número por vez: a célula surge por opacidade e conta devagar, dando tempo de leitura.
+const cells = $$('.board .cell');
+if (cells.length && !RM) {
+  gsap.set(cells, { autoAlpha: 0, y: 14 });
   ScrollTrigger.create({
-    trigger: el, start: 'top 88%', once: true,
-    onEnter: () => {
-      const o = { v: from };
-      setDigits(el, from);
-      gsap.to(o, { v: to, duration: 1.6, ease: 'power2.out', onUpdate: () => setDigits(el, o.v) });
-    },
+    trigger: cells[0].closest('.board')!, start: 'top 82%', once: true,
+    onEnter: () => cells.forEach((cell, i) => {
+      const el = $('[data-count]', cell);
+      const tl = gsap.timeline({ delay: i * 0.75 });
+      tl.to(cell, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power2.out' });
+      if (el) {
+        const to = Number(el.dataset.count), from = Number(el.dataset.from || 0), o = { v: from };
+        setDigits(el, from);
+        tl.to(o, { v: to, duration: 2.4, ease: 'power3.out', onUpdate: () => setDigits(el, o.v) }, 0.15);
+      }
+    }),
   });
-});
+}
 
 /* ============ manifesto: words light up with the scroll ============ */
 const mf = $('#manifesto');
@@ -334,21 +389,6 @@ if (mf && !RM) {
       const n = Math.round(clamp(s.progress * 1.15, 0, 1) * words.length);
       words.forEach((w, i) => w.classList.toggle('on', i < n));
       meter?.style.setProperty('--p', clamp(s.progress * 1.15, 0, 1).toFixed(3));
-    },
-  });
-}
-
-/* ============ method: progress line ============ */
-const mt = $('#metodo');
-if (mt && !RM) {
-  const steps = $$('.step', mt);
-  const line = $('.mt__line i', mt);
-  mt.classList.add('live');
-  gsap.fromTo(line, { scaleX: 0 }, {
-    scaleX: 1, ease: 'none',
-    scrollTrigger: {
-      trigger: $('.mt__g', mt), start: 'top 80%', end: 'bottom 55%', scrub: 0.4,
-      onUpdate: (s) => steps.forEach((st, i) => st.classList.toggle('on', s.progress >= (i + 0.3) / steps.length || s.progress > 0.98)),
     },
   });
 }
@@ -496,74 +536,6 @@ if (quiz) {
     show(1);
   });
   $('#qzwa')?.addEventListener('click', (e) => puff((e as MouseEvent).clientX, (e as MouseEvent).clientY));
-}
-
-/* ============ calculator ============ */
-const kg = $<HTMLInputElement>('#kg');
-const reps = $<HTMLInputElement>('#reps');
-if (kg && reps) {
-  const repsv = $('#repsv')!, rmEl = $('#rm')!;
-  let zSel = 0.8;
-  const shown = { v: 96 };
-  const PL = [25, 20, 15, 10, 5, 2.5, 1.25];
-  const PH: Record<number, number> = { 25: 100, 20: 100, 15: 88, 10: 74, 5: 54, 2.5: 42, 1.25: 34 };
-  const PW: Record<number, number> = { 25: 22, 20: 19, 15: 16, 10: 13, 5: 10, 2.5: 8, 1.25: 6 };
-  const r25 = (v: number) => Math.round(v / 2.5) * 2.5;
-  const fmt = (v: number) => v.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-  const calcRM = () => { const w = parseFloat(kg.value) || 0, r = Number(reps.value); return r === 1 ? w : w * (1 + r / 30); };
-  const plates = (total: number) => { let side = (total - 20) / 2; const out: number[] = []; if (side < 0) return out; PL.forEach((p) => { while (side >= p - 1e-9) { out.push(p); side -= p; } }); return out; };
-  const drawBar = (animate: boolean) => {
-    const t = Math.max(20, r25(calcRM() * zSel));
-    const ps = plates(t);
-    const L = $('#barl')!, R = $('#barr')!;
-    L.innerHTML = ''; R.innerHTML = '';
-    const H = $('#barviz')!.clientHeight - 24;
-    const made: { el: HTMLElement; side: number }[] = [];
-    ps.forEach((p) => {
-      [L, R].forEach((side, si) => {
-        const d = document.createElement('span');
-        d.className = `pl pl--${String(p).replace('.', '')}`;
-        d.style.height = Math.round((H * PH[p]) / 100) + 'px';
-        d.style.width = PW[p] + 'px';
-        side.appendChild(d);
-        made.push({ el: d, side: si });
-      });
-    });
-    $('#perside')!.textContent = ps.length ? ps.map(fmt).join(' + ') + ' kg' : 'só a barra';
-    $('#barviz')!.setAttribute('aria-label', `Barra com ${fmt(t)} kg: ${ps.length ? ps.map(fmt).join(', ') + ' kg de cada lado' : 'só a barra'}`);
-    if (animate && !RM && made.length) {
-      // As anilhas entram pela ponta da barra, da mais pesada para a mais leve.
-      gsap.from(made.map((m) => m.el), { x: (i) => (made[i].side === 0 ? -90 : 90), autoAlpha: 0, duration: 0.5, ease: 'expo.out', stagger: 0.04 });
-    }
-  };
-  const calc = (animateBar: boolean) => {
-    const r = Number(reps.value);
-    repsv.textContent = String(r);
-    reps.style.setProperty('--fill', ((r - 1) / 11) * 100 + '%');
-    const rm = calcRM();
-    const target = Math.round(rm);
-    if (RM) { shown.v = target; rmEl.textContent = String(target); }
-    else gsap.to(shown, { v: target, duration: 0.45, ease: 'power3.out', overwrite: true, onUpdate: () => { rmEl.textContent = String(Math.round(shown.v)); } });
-    $$<HTMLTableRowElement>('#zones tbody tr').forEach((tr) => { $('.kg', tr)!.textContent = fmt(r25(rm * Number(tr.dataset.p))) + ' kg'; });
-    const ex = $<HTMLInputElement>('input[name="ex"]:checked')!.value;
-    $('#rmlbl')!.textContent = `Carga máxima estimada · ${ex}`;
-    drawBar(animateBar);
-  };
-  let barT: number | undefined;
-  const calcSoon = () => { calc(false); clearTimeout(barT); barT = window.setTimeout(() => drawBar(true), 350); };
-  kg.addEventListener('input', calcSoon);
-  kg.addEventListener('change', () => { kg.value = String(clamp(parseFloat(kg.value) || 20, 20, 400)); calc(true); });
-  reps.addEventListener('input', calcSoon);
-  $$<HTMLInputElement>('input[name="ex"]').forEach((r) => r.addEventListener('change', () => { kg.value = r.dataset.kg || '80'; calc(true); }));
-  $$<HTMLButtonElement>('.num button').forEach((b) => b.addEventListener('click', () => { kg.value = String(clamp((parseFloat(kg.value) || 0) + parseFloat(b.dataset.step!), 20, 400)); calcSoon(); }));
-  $$<HTMLTableRowElement>('#zones tbody tr').forEach((tr) => tr.addEventListener('click', () => {
-    zSel = Number(tr.dataset.p);
-    $$('#zones tbody tr').forEach((o) => { o.classList.toggle('sel', o === tr); $('button', o)?.setAttribute('aria-pressed', String(o === tr)); });
-    drawBar(true);
-  }));
-  calc(false);
-  const barviz = $('#barviz');
-  if (barviz && !RM) ScrollTrigger.create({ trigger: barviz, start: 'top 85%', once: true, onEnter: () => drawBar(true) });
 }
 
 /* ============ units panel ============ */

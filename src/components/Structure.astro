@@ -10,7 +10,7 @@ const stars = [0, 1, 2, 3, 4];
     </div>
     <div class="bento">
       <a class="bx bx--pan" href="/pato-branco/">
-        <div class="zoom" data-reveal><Pic base="anilha" alt="Anilha e presilha amarela sob luz lateral" sizes="(max-width: 1100px) 100vw, 58vw" /></div>
+        <div class="zoom"><video class="bx__vid" muted loop playsinline preload="none" poster="/img/panatta-poster-720.webp" data-src="/video/panatta-720.mp4" aria-label="Máquinas Panatta na unidade Pato Branco" data-auto></video></div>
         <div class="bx__stack">
           <span class="bx__where">Panatta · Pato Branco</span>
           <h3>De Roma para<br />o Sudoeste.</h3>
@@ -18,7 +18,8 @@ const stars = [0, 1, 2, 3, 4];
           <div class="bx__q"><p>“Hoje esse sonho se tornou realidade.”</p></div>
         </div>
       </a>
-      <article class="bx bx--rl">
+      <article class="bx bx--ph bx--rl">
+        <div class="zoom"><video class="bx__vid" muted loop playsinline preload="none" poster="/img/realleader-poster-720.webp" data-src="/video/realleader-720.mp4" aria-label="Máquina Real Leader com placa Real Leader Gym Equipment" data-auto></video></div>
         <div class="bx__stack">
           <span class="bx__where">Pato Branco</span>
           <h3>Real Leader USA</h3>
@@ -26,13 +27,14 @@ const stars = [0, 1, 2, 3, 4];
         </div>
         <div class="seal"><span class="seal__bar" aria-hidden="true">{stars.map(() => <svg><use href="#star" /></svg>)}</span><span class="lbl" style="color:#fff">Padrão GOFIT</span></div>
       </article>
-      <article class="bx bx--park">
+      <article class="bx bx--ph bx--park">
+        <div class="zoom"><picture><source type="image/webp" srcset="/img/estacionamento-736.webp" /><img src="/img/estacionamento-736.jpg" alt="Estacionamento com vagas demarcadas visto de cima" width="736" height="981" loading="lazy" decoding="async" style="object-position:50% 45%" /></picture></div>
         <span class="bx__big" aria-hidden="true">60</span>
-        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Cerca de 60 vagas</h3><p>Estacionamento próprio.</p></div>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Cerca de 60 vagas</h3><p>Estacionamento próprio. Chegou, estacionou, treinou.</p></div>
       </article>
-      <article class="bx bx--vest">
-        <svg class="bx__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-3zM6 12V5a2 2 0 0 1 4 0M8 20l-1 2M16 20l1 2" /></svg>
-        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Vestiário com chuveiro</h3></div>
+      <article class="bx bx--ph bx--vest">
+        <div class="zoom"><picture><source type="image/webp" srcset="/img/vestiario-736.webp" /><img src="/img/vestiario-736.jpg" alt="Boxes de chuveiro com portas de vidro no vestiário" width="736" height="981" loading="lazy" decoding="async" style="object-position:50% 40%" /></picture></div>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Vestiário com chuveiro</h3><p>Treine antes do trabalho, tome banho e siga o dia.</p></div>
       </article>
       <a class="bx bx--ph bx--spin" href="/realeza/">
         <div class="zoom"><Pic base="spinning" alt="Turma pedalando em aula de spinning sob luz neon" sizes="(max-width: 1100px) 100vw, 42vw" pos="62% 38%" /></div>
@@ -44,7 +46,7 @@ const stars = [0, 1, 2, 3, 4];
       </a>
       <a class="bx bx--ph bx--func" href="/francisco-beltrao/">
         <div class="zoom"><Pic base="funcional" alt="Barra carregada e kettlebell no piso da área funcional" sizes="(max-width: 620px) 100vw, (max-width: 1100px) 50vw, 25vw" pos="45% 60%" /></div>
-        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Área funcional</h3></div>
+        <div class="bx__stack"><span class="bx__where">F. Beltrão</span><h3>Área funcional</h3><p>Barra, kettlebell e peso do corpo em circuito.</p></div>
       </a>
     </div>
   </div>

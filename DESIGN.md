@@ -42,12 +42,13 @@ A gramática é a **varredura** (wipe), tirada da barra da logo:
 
 Momentos com autoria:
 
-1. A abertura: vídeo real da academia em tríptico (três faixas do mesmo vídeo em tempos diferentes; no celular, uma faixa em tela cheia). As faixas sobem por recorte, o título entra pela varredura e a faixa sob o cursor acende. Com movimento reduzido ou economia de dados, fica o pôster e o botão de reproduzir.
-6. Cartões com foto: véu preto sobre a imagem; no hover (ou ao passar pelo centro da tela, em touch) a foto ganha cor e aproxima de leve, sem sair da borda.
-2. O manifesto, que acende palavra por palavra com a rolagem.
-3. As modalidades, em trilho horizontal no computador.
-4. O placar, que conta como cronômetro.
-5. As anilhas entrando na barra da calculadora.
+1. A abertura: vídeo real da academia em tríptico (três faixas do mesmo vídeo em tempos diferentes; no celular, uma faixa em tela cheia). As faixas sobem por recorte, o título entra pela varredura e a faixa sob o cursor acende. Nas páginas de Pato Branco e Francisco Beltrão, o vídeo da unidade fica em pé ao lado do título, com as bordas esmaecendo no preto.
+2. O placar: um número por vez surge e conta devagar, no estilo do cronômetro de parede.
+3. O manifesto, que acende palavra por palavra com a rolagem.
+4. O método numa régua amarela: a seção fica presa, o ponteiro desce pelos risquinhos e cada passo lido sobe enquanto o próximo vem de baixo, acendendo número e título.
+5. As modalidades, em trilho horizontal no computador.
+6. A estrutura: cada cartão se revela na ordem de leitura, com um bloco amarelo e depois um preto, e a foto ou vídeo aparece por baixo. Depois, véu preto sobre a mídia que clareia com zoom sutil no hover (ou no centro da tela, em touch).
+7. "Monte sua primeira visita": momento de treino, unidade, período, companhia e interesse viram a mensagem pronta para o WhatsApp da unidade.
 
 Curva padrão `cubic-bezier(.16, 1, .3, 1)`; varreduras em `cubic-bezier(.76, 0, .24, 1)`. Tudo tem alternativa com `prefers-reduced-motion`.
 
