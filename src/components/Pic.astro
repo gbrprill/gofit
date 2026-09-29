@@ -1,7 +1,13 @@
 ---
 interface Props { base: string; alt: string; sizes?: string; loading?: 'lazy' | 'eager'; pos?: string; priority?: boolean; cls?: string }
-const WIDTHS: Record<string, number[]> = { hero: [800, 1280, 1920], anilha: [720, 1080], halter: [800, 1400], kettlebells: [800, 1400] };
-const DIMS: Record<string, [number, number]> = { hero: [1920, 1080], anilha: [1080, 1600], halter: [1400, 875], kettlebells: [1400, 875] };
+const WIDTHS: Record<string, number[]> = {
+  hero: [800, 1280, 1920], anilha: [720, 1080], halter: [800, 1400], kettlebells: [800, 1400],
+  spinning: [640, 1024], avaliacao: [800, 1400], funcional: [800, 1400], fitdance: [640, 1200], musculacao: [640, 1024],
+};
+const DIMS: Record<string, [number, number]> = {
+  hero: [1920, 1080], anilha: [1080, 1600], halter: [1400, 875], kettlebells: [1400, 875],
+  spinning: [1024, 1024], avaliacao: [1400, 933], funcional: [1400, 933], fitdance: [1200, 1200], musculacao: [1024, 1024],
+};
 const { base, alt, sizes = '100vw', loading = 'lazy', pos, priority = false, cls } = Astro.props;
 const ws = WIDTHS[base];
 const [w, h] = DIMS[base];

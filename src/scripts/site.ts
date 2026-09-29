@@ -195,6 +195,67 @@ if (hero && lit && !RM) {
   });
 }
 
+/* ============ hero: vídeo em tríptico ============ */
+const reel = $$<HTMLVideoElement>('.hero__strip video');
+const playBtn = $<HTMLButtonElement>('#heroplay');
+if (hero && reel.length) {
+  const strips = $$('.hero__strip', hero);
+  const mobile = matchMedia('(max-width: 760px)');
+  const saveData = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  // Movimento reduzido ou economia de dados: fica no pôster até a pessoa pedir o vídeo.
+  let paused = RM || saveData;
+  let inView = true;
+  const load = (v: HTMLVideoElement) => {
+    if (v.dataset.ready) return;
+    v.dataset.ready = '1';
+    const t = Number(v.dataset.t || 0);
+    if (t) v.addEventListener('loadedmetadata', () => { v.currentTime = t; }, { once: true });
+    v.addEventListener('playing', () => v.classList.add('on'), { once: true });
+    v.preload = 'auto';
+    v.src = mobile.matches ? '/video/hero-540.mp4' : '/video/hero-720.mp4';
+  };
+  const sync = () => {
+    reel.forEach((v, i) => {
+      const on = !paused && inView && !document.hidden && (i === 0 || !mobile.matches);
+      if (on) { load(v); v.play().catch(() => {}); } else if (!v.paused) v.pause();
+    });
+    playBtn?.classList.toggle('is-paused', paused);
+    playBtn?.setAttribute('aria-label', paused ? 'Reproduzir vídeo' : 'Pausar vídeo');
+  };
+  if (playBtn) {
+    playBtn.hidden = false;
+    playBtn.addEventListener('click', () => { paused = !paused; sync(); });
+  }
+  ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: (s) => { inView = s.isActive; sync(); } });
+  document.addEventListener('visibilitychange', sync);
+  mobile.addEventListener('change', sync);
+  sync();
+
+  if (!RM && !mobile.matches) {
+    gsap.from(strips, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.1, stagger: 0.12, ease: 'power4.inOut', delay: 0.1, clearProps: 'clipPath' });
+  }
+  // A faixa sob o cursor acende, como a luz que seguia o cursor na versão com foto.
+  if (FINE) {
+    let hot = -1;
+    hero.addEventListener('pointermove', (e) => {
+      if (mobile.matches) return;
+      const r = hero.getBoundingClientRect();
+      const i = clamp(Math.floor(((e.clientX - r.left) / r.width) * strips.length), 0, strips.length - 1);
+      if (i === hot) return;
+      strips[hot]?.classList.remove('hot');
+      strips[i].classList.add('hot');
+      hot = i;
+    });
+    hero.addEventListener('pointerleave', () => { strips[hot]?.classList.remove('hot'); hot = -1; });
+  }
+}
+
+/* ============ cartões com foto: em touch, acendem ao passar pelo centro da tela ============ */
+if (!FINE && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('lit', e.isIntersecting)), { rootMargin: '-38% -20% -38% -20%' });
+  $$('.mc, .bx').forEach((c) => { if ($('.zoom', c)) io.observe(c); });
+}
+
 /* ============ header, progress, sticky bar ============ */
 const prog = $('#prog');
 const sbar = $('#sbar');

@@ -42,7 +42,8 @@ A gramática é a **varredura** (wipe), tirada da barra da logo:
 
 Momentos com autoria:
 
-1. A abertura: varredura do título e depois a luz que segue o cursor sobre a barra.
+1. A abertura: vídeo real da academia em tríptico (três faixas do mesmo vídeo em tempos diferentes; no celular, uma faixa em tela cheia). As faixas sobem por recorte, o título entra pela varredura e a faixa sob o cursor acende. Com movimento reduzido ou economia de dados, fica o pôster e o botão de reproduzir.
+6. Cartões com foto: véu preto sobre a imagem; no hover (ou ao passar pelo centro da tela, em touch) a foto ganha cor e aproxima de leve, sem sair da borda.
 2. O manifesto, que acende palavra por palavra com a rolagem.
 3. As modalidades, em trilho horizontal no computador.
 4. O placar, que conta como cronômetro.

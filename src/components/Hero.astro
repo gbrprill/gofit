@@ -1,10 +1,25 @@
 ---
-import Pic from './Pic.astro';
 import { CTA } from '../data/site';
+// Mesmo vídeo em três faixas, cada uma começando num ponto diferente. No celular só a primeira aparece.
+const strips = [
+  { t: 0, poster: 'hero-v0' },
+  { t: 4.5, poster: 'hero-v1' },
+  { t: 11, poster: 'hero-v2' },
+];
 ---
-<section class="hero" id="hero" aria-labelledby="hero-t">
-  <Pic base="hero" alt="Barra olímpica carregada sobre piso de borracha, sob luz lateral dura" priority sizes="100vw" cls="hero__img" />
-  <div class="hero__lit" id="lit" aria-hidden="true"><Pic base="hero" alt="" priority sizes="100vw" /></div>
+<section class="hero hero--vid" id="hero" aria-labelledby="hero-t">
+  <div class="hero__reel" aria-hidden="true">
+    {strips.map((s, i) => (
+      <div class="hero__strip">
+        <picture>
+          {i === 0 && <source media="(max-width: 760px)" type="image/webp" srcset={`/img/${s.poster}-540.webp`} />}
+          <source type="image/webp" srcset={`/img/${s.poster}-720.webp`} />
+          <img src={`/img/${s.poster}-720.jpg`} alt="" width="720" height="1280" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
+        </picture>
+        <video muted loop playsinline disablepictureinpicture preload="none" data-t={s.t} tabindex="-1"></video>
+      </div>
+    ))}
+  </div>
   <div class="hero__shade"></div>
   <div class="wrap hero__in">
     <div class="hero__txt">
@@ -24,5 +39,9 @@ import { CTA } from '../data/site';
       <a class="scue" href="#placar"><i></i><span>Role</span></a>
     </div>
   </div>
+  <button class="hero__play" type="button" id="heroplay" aria-label="Pausar vídeo" hidden>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" /></svg>
+  </button>
   <div class="hero__bar" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg><use href="#star" /></svg>)}</div>
 </section>

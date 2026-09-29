@@ -138,11 +138,11 @@ export interface Modality {
 }
 
 export const MODALITIES: Modality[] = [
-  { name: 'Musculação', tag: 'Peso livre e máquinas', text: 'Hipertrofia, força e condicionamento com equipamento de marca.', units: ['rz', 'fb', 'pb'], img: { base: 'halter', alt: 'Halter sextavado e anilhas empilhadas no piso de borracha', pos: '40% 50%' } },
+  { name: 'Musculação', tag: 'Peso livre e máquinas', text: 'Hipertrofia, força e condicionamento com equipamento de marca.', units: ['rz', 'fb', 'pb'], img: { base: 'musculacao', alt: 'Fileira de máquinas de musculação pretas e amarelas diante do painel GOFIT', pos: '30% 50%' } },
   { name: 'Funcional', tag: 'Kettlebell e peso do corpo', text: 'Circuitos para ganhar força que você usa fora da academia.', units: ['fb'], img: { base: 'kettlebells', alt: 'Dois kettlebells sob luz lateral', pos: '38% 50%' } },
   { name: 'Cross', tag: 'Barra, anilha e cronômetro', text: 'Treino intenso, com começo, meio e placar.', units: ['rz'], img: { base: 'anilha', alt: 'Anilha e presilha amarela em close', pos: '60% 40%' } },
   { name: 'Spinning', tag: 'Bike e ritmo', text: 'Cardio em grupo, com a carga na sua mão.', units: ['rz'], art: 'rpm' },
-  { name: 'Fit dance', tag: 'Coreografia em grupo', text: 'Energia alta do início ao fim. Quem chega tímido sai dançando.', units: ['rz', 'fb'], art: 'bpm' },
+  { name: 'Fit dance', tag: 'Coreografia em grupo', text: 'Energia alta do início ao fim. Quem chega tímido sai dançando.', units: ['rz', 'fb'], img: { base: 'fitdance', alt: 'Turma sorrindo e dançando em aula de fit dance sob luzes coloridas', pos: '52% 40%' } },
   { name: 'Personal', tag: 'Um profissional para você', text: 'Atenção total, do aquecimento à última série.', units: ['pb'], art: 'one' },
 ];
 
