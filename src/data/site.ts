@@ -53,7 +53,7 @@ export const UNITS: Record<UnitKey, Unit> = {
     district: 'Centro Cívico',
     cep: '85770-000',
     mods: ['Musculação', 'Cross', 'Spinning', 'Fit dance'],
-    highlights: ['Primeira unidade da rede, desde 2016', 'Musculação, cross, spinning e fit dance', 'Aroma próprio no ambiente'],
+    highlights: ['Primeira unidade da rede, desde 2016', 'Musculação, cross, spinning e fit dance', 'Mascote da casa: o Sheriff, um caramelo'],
     instagram: 'gofit_realeza',
     followers: '4,1 mil',
     maps: 'Rua Belém, 2454, Realeza, PR',
