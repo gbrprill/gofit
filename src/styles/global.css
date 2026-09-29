@@ -209,6 +209,7 @@ button { font: inherit; color: inherit; }
 .cell__l { font-family: var(--f-l); font-weight: 600; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--t3); max-width: 17em; line-height: 1.35; }
 .digits { display: flex; align-items: flex-end; gap: .1em; font-size: clamp(56px, 6.4vw, 96px); height: 1em; }
 .digits small { font-family: var(--f-l); font-weight: 800; font-size: .3em; letter-spacing: .08em; color: var(--y); margin-left: .12em; line-height: 1; padding-bottom: .02em; }
+.digits small.plus { font-size: .55em; margin-left: .06em; padding-bottom: .1em; }
 .seg { position: relative; width: .56em; height: 1em; transform: skewX(-6deg); flex-shrink: 0; }
 .seg i { position: absolute; background: var(--y); opacity: 0; transition: opacity .12s; border-radius: 1px; }
 .seg[data-d="1"] { width: .16em; }

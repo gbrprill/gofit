@@ -10,5 +10,5 @@ const str = String(value).padStart(pad, '0');
   {!font && str.split('').map((d) => (
     <span class="seg" data-d={d}><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><i class="e"></i><i class="f"></i><i class="g"></i></span>
   ))}
-  {suffix && <small>{suffix}</small>}
+  {suffix && <small class:list={{ plus: suffix === '+' }}>{suffix}</small>}
 </span>
