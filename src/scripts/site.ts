@@ -143,7 +143,7 @@ if (sheet) {
 $$('[data-open-unit]').forEach((b) => b.addEventListener('click', () => { closeMenu(); openSheet('unit'); }));
 $$('[data-open-page]').forEach((b) => b.addEventListener('click', () => openSheet('page')));
 
-/* ============ faq: a resposta se revela ao abrir; no computador abre com o mouse, no celular com toque ============ */
+/* ============ faq: abre com clique ou toque, e a resposta se revela ============ */
 const faqItems = $$<HTMLDetailsElement>('.faq details');
 const faqOpen = (d: HTMLDetailsElement) => {
   if (d.open && !d.dataset.closing) return;
@@ -172,12 +172,6 @@ faqItems.forEach((d) => {
     if (d.open && !d.dataset.closing) faqClose(d);
     else { faqItems.forEach((o) => { if (o !== d) faqClose(o); }); faqOpen(d); }
   });
-  if (!FINE) return;
-  let t: number | undefined;
-  // Pequena espera evita abrir tudo quando o mouse só atravessa a lista.
-  d.addEventListener('mouseenter', () => { clearTimeout(t); t = window.setTimeout(() => { faqItems.forEach((o) => { if (o !== d) faqClose(o); }); faqOpen(d); }, 140); });
-  // Fecha só quando o mouse sai da pergunta inteira, resposta incluída.
-  d.addEventListener('mouseleave', () => { clearTimeout(t); t = window.setTimeout(() => faqClose(d), 160); });
 });
 
 document.addEventListener('click', (e) => {
