@@ -143,17 +143,42 @@ if (sheet) {
 $$('[data-open-unit]').forEach((b) => b.addEventListener('click', () => { closeMenu(); openSheet('unit'); }));
 $$('[data-open-page]').forEach((b) => b.addEventListener('click', () => openSheet('page')));
 
-/* ============ faq: no computador abre com o mouse; no celular, com toque ============ */
-if (FINE) {
-  const items = $$<HTMLDetailsElement>('.faq details');
-  items.forEach((d) => {
-    let t: number | undefined;
-    // Pequena espera evita abrir tudo quando o mouse só atravessa a lista.
-    d.addEventListener('mouseenter', () => { clearTimeout(t); t = window.setTimeout(() => { items.forEach((o) => { if (o !== d) o.open = false; }); d.open = true; }, 140); });
-    // Fecha só quando o mouse sai da pergunta inteira, resposta incluída.
-    d.addEventListener('mouseleave', () => { clearTimeout(t); t = window.setTimeout(() => { d.open = false; }, 160); });
+/* ============ faq: a resposta se revela ao abrir; no computador abre com o mouse, no celular com toque ============ */
+const faqItems = $$<HTMLDetailsElement>('.faq details');
+const faqOpen = (d: HTMLDetailsElement) => {
+  if (d.open && !d.dataset.closing) return;
+  delete d.dataset.closing;
+  d.open = true;
+  const a = $('.ans', d);
+  if (!a || RM) return;
+  gsap.killTweensOf([a, ...Array.from(a.children)]);
+  gsap.fromTo(a, { height: 0, clipPath: 'inset(0% 0% 100% 0%)' }, { height: 'auto', clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power3.out', clearProps: 'height,clipPath' });
+  gsap.fromTo(a.children, { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.07, delay: 0.12, ease: 'power2.out', clearProps: 'transform,opacity,visibility' });
+};
+const faqClose = (d: HTMLDetailsElement) => {
+  if (!d.open || d.dataset.closing) return;
+  const a = $('.ans', d);
+  if (!a || RM) { d.open = false; return; }
+  d.dataset.closing = '1';
+  gsap.killTweensOf([a, ...Array.from(a.children)]);
+  gsap.to(a, {
+    height: 0, clipPath: 'inset(0% 0% 100% 0%)', duration: 0.35, ease: 'power2.in',
+    onComplete: () => { if (d.dataset.closing) { d.open = false; delete d.dataset.closing; } gsap.set(a, { clearProps: 'height,clipPath' }); },
   });
-}
+};
+faqItems.forEach((d) => {
+  $('summary', d)?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (d.open && !d.dataset.closing) faqClose(d);
+    else { faqItems.forEach((o) => { if (o !== d) faqClose(o); }); faqOpen(d); }
+  });
+  if (!FINE) return;
+  let t: number | undefined;
+  // Pequena espera evita abrir tudo quando o mouse só atravessa a lista.
+  d.addEventListener('mouseenter', () => { clearTimeout(t); t = window.setTimeout(() => { faqItems.forEach((o) => { if (o !== d) faqClose(o); }); faqOpen(d); }, 140); });
+  // Fecha só quando o mouse sai da pergunta inteira, resposta incluída.
+  d.addEventListener('mouseleave', () => { clearTimeout(t); t = window.setTimeout(() => faqClose(d), 160); });
+});
 
 document.addEventListener('click', (e) => {
   const a = (e.target as Element).closest?.('[data-wa]') as HTMLAnchorElement | null;

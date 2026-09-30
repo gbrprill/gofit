@@ -42,7 +42,7 @@ const belt = [...lap, ...lap];
   // A velocidade é fixa em pixels por segundo, qualquer que seja o número de avaliações.
   document.querySelectorAll<HTMLElement>('[data-rvw]').forEach((box) => {
     const track = box.querySelector<HTMLElement>('.rvw__track')!;
-    const set = () => box.style.setProperty('--rvw-dur', `${Math.max(30, track.scrollWidth / 2 / 28)}s`);
+    const set = () => box.style.setProperty('--rvw-dur', `${Math.max(30, track.scrollWidth / 2 / 42)}s`);
     set();
     addEventListener('resize', set);
   });
