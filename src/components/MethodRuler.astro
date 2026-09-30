@@ -53,9 +53,24 @@ const hid = `${id}-t`;
     const steps = Array.from(sec.querySelectorAll<HTMLElement>('.mr__step'));
     const n = steps.length;
     sec.classList.add('live');
+    // A troca de passo é por tempo: o lido sai, espera 0,3 s e o próximo entra acendendo.
+    let cur = 0;
+    const swap = (to: number) => {
+      const from = cur;
+      if (to === from) return;
+      cur = to;
+      const dir = to > from ? 1 : -1;
+      gsap.killTweensOf(steps);
+      steps.forEach((s, i) => { if (i !== from && i !== to) { gsap.set(s, { autoAlpha: 0 }); s.classList.remove('on'); } });
+      steps[from].classList.remove('on');
+      gsap.to(steps[from], { yPercent: -60 * dir, autoAlpha: 0, duration: 0.35, ease: 'power2.in' });
+      gsap.fromTo(steps[to], { yPercent: 60 * dir, autoAlpha: 0 }, {
+        yPercent: 0, autoAlpha: 1, duration: 0.55, ease: 'power3.out', delay: 0.35 + 0.3,
+        onStart: () => steps[to].classList.add('on'),
+      });
+    };
     const light = (p: number) => {
-      const idx = Math.round(p * (n - 1));
-      steps.forEach((s, i) => { s.classList.toggle('on', i === idx); s.classList.toggle('past', i < idx); });
+      swap(Math.round(p * (n - 1)));
       sec.querySelectorAll<HTMLElement>('.mr__tick').forEach((t, i) => {
         const at = t.dataset.at != null ? Number(t.dataset.at) : NaN;
         if (!Number.isNaN(at)) t.classList.toggle('lit', at <= p + 0.001);
@@ -69,11 +84,6 @@ const hid = `${id}-t`;
     gsap.set(steps[0], { yPercent: 0, autoAlpha: 1 });
     tl.fromTo(ptr, { top: '0%' }, { top: '100%', duration: n - 1 }, 0)
       .fromTo(fill, { scaleY: 0 }, { scaleY: 1, duration: n - 1 }, 0);
-    for (let i = 1; i < n; i++) {
-      // o passo lido sobe e some; o próximo vem de baixo
-      tl.to(steps[i - 1], { yPercent: -60, autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, i - 0.55)
-        .to(steps[i], { yPercent: 0, autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, i - 0.4);
-    }
 
     ScrollTrigger.create({
       trigger: sec, pin, start: 'top top', end: () => `+=${innerHeight * 0.8 * (n - 1)}`,
@@ -81,6 +91,7 @@ const hid = `${id}-t`;
       snap: { snapTo: 1 / (n - 1), directional: false, inertia: false, duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: 'power2.inOut' },
       onUpdate: (s) => light(s.progress),
     });
+    steps[0].classList.add('on');
     light(0);
   });
 </script>

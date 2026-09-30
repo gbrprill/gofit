@@ -13,7 +13,14 @@ import { FAQ } from '../data/site';
     </div>
     <div class="faq">
       {FAQ.map((f, i) => (
-        <details open={i === 0}><summary>{f.q}<i aria-hidden="true"></i></summary><div class="ans"><p>{f.a}</p></div></details>
+        <details open={i === 0}>
+          <summary>{f.q}<i aria-hidden="true"></i></summary>
+          <div class="ans">
+            {f.a.map((p) => <p>{p}</p>)}
+            {f.cta?.kind === 'wa' && <a class="btn btn--y btn--sm ans__cta" href="#unidades" data-wa="faq" data-mod={f.cta.mod} target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#wa" /></svg>{f.cta.label}</a>}
+            {f.cta?.kind === 'page' && <button class="btn btn--y btn--sm ans__cta" type="button" data-open-page>{f.cta.label}<svg class="i-arr" aria-hidden="true"><use href="#arr" /></svg></button>}
+          </div>
+        </details>
       ))}
     </div>
   </div>

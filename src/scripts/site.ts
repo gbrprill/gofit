@@ -96,7 +96,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(
 
 /* ============ unit sheet ============ */
 const sheet = $<HTMLDialogElement>('#sheet');
-let shMode: 'wa' | 'unit' = 'wa';
+let shMode: 'wa' | 'unit' | 'page' = 'wa';
 let shOrigin = 'site';
 let shMod: string | null = null;
 function shUpdate() {
@@ -108,14 +108,17 @@ function shUpdate() {
   const k = sel.value as UnitKey;
   go.removeAttribute('aria-disabled');
   if (shMode === 'wa') { const t = msgFor(k, shMod); msg.textContent = `“${t}”`; go.href = waHref(k, t, shOrigin); }
+  else if (shMode === 'page') go.href = `/${UNITS[k].slug}/`;
   else go.href = '#';
 }
-function openSheet(mode: 'wa' | 'unit', origin?: string, mod?: string | null) {
+function openSheet(mode: 'wa' | 'unit' | 'page', origin?: string, mod?: string | null) {
   if (!sheet) return;
   shMode = mode; shOrigin = origin || 'site'; shMod = mod || null;
   $$<HTMLInputElement>('input[name="su"]', sheet).forEach((r) => { r.checked = r.value === unit; });
   $('#shprev')!.hidden = mode !== 'wa';
-  $('#shgot')!.textContent = mode === 'wa' ? 'Continuar no WhatsApp' : 'Confirmar unidade';
+  $('#shgot')!.textContent = mode === 'wa' ? 'Continuar no WhatsApp' : mode === 'page' ? 'Ver a unidade' : 'Confirmar unidade';
+  $('#sh-t')!.textContent = mode === 'page' ? 'Qual unidade você quer conhecer?' : 'Em qual unidade você vai treinar?';
+  $('#shgo svg')?.toggleAttribute('hidden', mode !== 'wa');
   const go = $<HTMLAnchorElement>('#shgo')!;
   if (mode === 'wa') go.target = '_blank'; else go.removeAttribute('target');
   shUpdate();
@@ -133,11 +136,13 @@ if (sheet) {
     setUnit(k); showUnit(k);
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
     puff(r.left + r.width / 2, r.top + r.height / 2);
+    if (shMode === 'page') return; // segue o link para a página da unidade
     if (shMode !== 'wa') e.preventDefault();
     setTimeout(closeSheet, shMode === 'wa' ? 150 : 260);
   });
 }
 $$('[data-open-unit]').forEach((b) => b.addEventListener('click', () => { closeMenu(); openSheet('unit'); }));
+$$('[data-open-page]').forEach((b) => b.addEventListener('click', () => openSheet('page')));
 
 document.addEventListener('click', (e) => {
   const a = (e.target as Element).closest?.('[data-wa]') as HTMLAnchorElement | null;
@@ -278,8 +283,8 @@ if (bxs.length && !RM) {
       .fromTo(media, { scale: 1.18 }, { scale: 1, duration: 1.1, ease: 'expo.out', clearProps: 'transform' })
       .to(k, { scaleX: 0, duration: 0.55, ease: 'power3.inOut', onComplete: () => k?.remove() }, '<');
   };
-  // Um cartão por vez, na ordem de leitura: cada um começa 0,8 s depois do anterior.
-  const GAP = 0.8;
+  // Um cartão por vez, na ordem de leitura: cada um começa 0,6 s depois do anterior.
+  const GAP = 0.6;
   let nextAt = 0;
   ScrollTrigger.batch(bxs, {
     start: 'top+=30% bottom', once: true,
@@ -454,6 +459,16 @@ if (hs && track && !RM) {
 if (!RM) {
   // Cabeçalhos: cada linha sobe e aparece, uma depois da outra.
   $$('.sec-head, .qz__intro, .hs__top, .pv__l, .fin__in, .story__txt').forEach((g) => {
+    const lines = $$('.h2 .ln', g);
+    if (lines.length) {
+      // Título em duas partes: a primeira aparece e a segunda vem 0,5 s depois.
+      const rest = Array.from(g.children).filter((c) => !c.contains(lines[0]));
+      gsap.timeline({ scrollTrigger: { trigger: g, start: 'top 86%', once: true } })
+        .from(lines[0], { y: 40, autoAlpha: 0, duration: 0.8, ease: 'expo.out', clearProps: 'transform' })
+        .from(lines.slice(1), { y: 40, autoAlpha: 0, duration: 0.8, ease: 'expo.out', clearProps: 'transform' }, '+=0.5')
+        .from(rest, { y: 30, autoAlpha: 0, duration: 0.8, ease: 'expo.out', clearProps: 'transform' }, '-=0.4');
+      return;
+    }
     gsap.from(g.children, { y: 40, autoAlpha: 0, duration: 1, stagger: 0.1, ease: 'expo.out', clearProps: 'transform', scrollTrigger: { trigger: g, start: 'top 86%', once: true } });
   });
   // Blocos de conteúdo: sobem juntos logo depois do cabeçalho.
@@ -579,7 +594,17 @@ function fillUnit(k: UnitKey) {
   f('hoursrow')!.hidden = !u.hours;
   f('hours')!.textContent = u.hours || '';
   f('mods')!.textContent = u.mods.join(' · ');
-  f('feat')!.textContent = u.highlights.join(' · ');
+  const feat = f('feat')!;
+  feat.textContent = u.highlights.join(' · ');
+  // O nome do mascote vira um link que mostra a foto dele.
+  if (feat.textContent.includes('Sheriff')) {
+    const [a, b] = feat.textContent.split('Sheriff');
+    feat.textContent = a;
+    const t = document.createElement('span');
+    t.className = 'sheriff'; t.tabIndex = 0;
+    t.innerHTML = 'Sheriff<span class="sheriff__pop" role="img" aria-label="Foto do Sheriff, o mascote caramelo da GOFIT Realeza"><picture><source type="image/webp" srcset="/img/sheriff-480.webp" /><img src="/img/sheriff-480.jpg" alt="" width="480" height="480" loading="lazy" /></picture></span>';
+    feat.append(t, b);
+  }
   const ig = f('ig') as HTMLAnchorElement; ig.textContent = '@' + u.instagram; ig.href = `https://www.instagram.com/${u.instagram}/`;
   f('cta')!.textContent = `Falar com ${u.short}`;
   (f('page') as HTMLAnchorElement).href = `/${u.slug}/`;

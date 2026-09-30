@@ -146,22 +146,42 @@ export const MODALITIES: Modality[] = [
   { name: 'Personal', tag: 'Um profissional para você', text: 'Atenção total, do aquecimento à última série.', units: ['pb'], art: 'one' },
 ];
 
-export const POSTS = [
-  { date: '28 jul 2026', unit: 'Pato Branco', title: 'A chegada da Panatta', url: 'https://www.instagram.com/p/DbVySNUTO1i/' },
-  { date: '24 jul 2026', unit: 'F. Beltrão', title: 'Tour pela estrutura', url: 'https://www.instagram.com/p/DbLWdx6hWta/' },
-  { date: '13 jun 2026', unit: 'Realeza', title: 'Novo layout a caminho', url: 'https://www.instagram.com/p/DZh4290kdi3/' },
-  { date: '24 nov 2025', unit: 'Pato Branco', title: 'A inauguração', url: 'https://www.instagram.com/p/DRdBDmOEujj/' },
+// cta: botão dentro da resposta aberta. 'wa' abre o WhatsApp da unidade; 'page' leva à página da unidade escolhida.
+export interface FaqItem { q: string; a: string[]; cta?: { label: string; kind: 'wa' | 'page'; mod?: string } }
+export const FAQ: FaqItem[] = [
+  {
+    q: 'Posso conhecer antes de me matricular?',
+    a: ['Claro! Agende uma visita e venha conhecer de perto a estrutura, os equipamentos, as modalidades e o ambiente da GOFIT. Nossa equipe apresenta a unidade e ajuda você a encontrar o treino ideal para os seus objetivos. Escolha a unidade mais próxima e venha viver a experiência GOFIT.'],
+    cta: { label: 'Agendar visita', kind: 'wa' },
+  },
+  { q: 'Tem estacionamento?', a: ['Em Francisco Beltrão, sim: estacionamento próprio com cerca de 60 vagas. Nas outras unidades, pergunte à equipe.'] },
+  {
+    q: 'Tem avaliação física?',
+    a: ['Sim! A avaliação física identifica seu ponto de partida, suas necessidades e seus objetivos. A partir dela, você recebe um treino personalizado, desenvolvido para tornar sua evolução mais segura, eficiente e alinhada ao resultado que deseja alcançar.'],
+    cta: { label: 'Quero começar meu treino', kind: 'wa', mod: 'começar meu treino com avaliação física' },
+  },
+  {
+    q: 'Quais equipamentos vou encontrar?',
+    a: [
+      'Todas as unidades contam com uma estrutura completa e equipamentos de alto padrão. Em Francisco Beltrão e Realeza, você encontra equipamentos Cimerian, que se destacam pela construção robusta, conforto, estabilidade e movimentos precisos durante o exercício.',
+      'São máquinas pensadas para proporcionar uma execução mais segura e eficiente, atendendo tanto quem está começando quanto quem já treina em alta intensidade. Venha conhecer a unidade mais próxima e sentir essa diferença na prática.',
+    ],
+    cta: { label: 'Conhecer a estrutura', kind: 'page' },
+  },
+  {
+    q: 'Quanto custa?',
+    a: ['Os valores variam conforme a unidade e o plano escolhido. Nossa equipe pode apresentar as opções e ajudar você a encontrar a que melhor combina com sua rotina e seus objetivos. Chame no WhatsApp ou agende uma visita para conhecer a academia antes de decidir.'],
+    cta: { label: 'Consultar planos e valores', kind: 'wa', mod: 'planos e valores' },
+  },
 ];
 
-export const FAQ = [
-  { q: 'Posso conhecer antes de me matricular?', a: 'Pode. Escolha a unidade, chame no WhatsApp e combine o melhor horário para visitar.' },
-  { q: 'Tem estacionamento?', a: 'Em Francisco Beltrão, sim: estacionamento próprio com cerca de 60 vagas. Nas outras unidades, pergunte à equipe.' },
-  { q: 'Tem avaliação física?', a: 'Em Francisco Beltrão, a avaliação física vem com treino personalizado. Nas outras unidades, consulte no WhatsApp.' },
-  { q: 'Quais equipamentos vou encontrar?', a: 'Pato Branco tem máquinas Panatta, da Itália, e a linha Real Leader USA. Todas as unidades têm peso livre e máquinas de musculação.' },
-  { q: 'Quanto custa?', a: 'Cada unidade tem seus planos. Chame a unidade no WhatsApp e monte o plano certo para a sua rotina.' },
+// Avaliações do carrossel "A GOFIT por dentro". Só entram falas reais de alunos.
+// Para adicionar: { text, who, source } — who pode ser só o primeiro nome ou "Aluno(a)".
+export const REVIEWS: { text: string; who: string; source: string }[] = [
+  { text: 'Estrutura padrão ouro.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'Um sonho de academia.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'Impecável.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
 ];
-
-export const COMMENTS = ['Estrutura padrão ouro', 'Um sonho de academia', 'Impecável'];
 
 export const LEGAL = [
   { unit: 'Realeza', cnpj: '26.602.646/0001-32' },

@@ -28,8 +28,8 @@ Conversion happens in WhatsApp, one conversation per unit. Instagram profiles: @
 
 ## Capabilities and Constraints
 
-- Verified: modalities per unit as seen on Instagram; ~60 parking spots, locker rooms with showers and physical assessment in Francisco Beltrão; Panatta and Real Leader USA in Pato Branco; mascot Sheriff in Realeza. Realeza also has scent marketing, but the user asked (2026-09-29) never to mention it on the site.
-- Undecided (must not appear as fact until the client confirms): WhatsApp numbers, opening hours, whether a free trial class exists, prices and plans, staff names and CREF, the 4-step method, equipment brands in Realeza and Francisco Beltrão, whether the student plan is still active.
+- Verified: modalities per unit as seen on Instagram; ~60 parking spots, locker rooms with showers and physical assessment in Francisco Beltrão; Panatta and Real Leader USA in Pato Branco; mascot Sheriff in Realeza. Realeza also has scent marketing, but the user asked (2026-09-29) never to mention it on the site. Confirmed by the client on 2026-09-29: Cimerian equipment in Francisco Beltrão and Realeza, physical assessment with a personalized plan, and more than 1,500 students across the three units.
+- Undecided (must not appear as fact until the client confirms): WhatsApp numbers, opening hours, whether a free trial class exists, prices and plans, staff names and CREF, the 4-step method, whether the student plan is still active.
 - Primary action wording is neutral ("Agendar visita") until the trial class is confirmed.
 
 ## Brand Commitments
