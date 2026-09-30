@@ -60,7 +60,7 @@ export const UNITS: Record<UnitKey, Unit> = {
     whatsapp: null,
     hours: null,
     pitch: 'Realeza reúne musculação, cross, spinning e fit dance no mesmo endereço.',
-    seoTitle: 'Academia em Realeza · GOFIT Premium Gym',
+    seoTitle: 'Academia em Realeza · GoFit Premium Gym',
     seoDescription: 'GOFIT Realeza, a primeira unidade da rede. Musculação, cross, spinning e fit dance na Rua Belém, 2454. Agende sua visita pelo WhatsApp.',
     story: {
       title: 'Onde tudo começou.',
@@ -88,7 +88,7 @@ export const UNITS: Record<UnitKey, Unit> = {
     whatsapp: null,
     hours: null,
     pitch: 'Em Francisco Beltrão você começa com avaliação física e treino personalizado, e estaciona na porta.',
-    seoTitle: 'Academia em Francisco Beltrão · GOFIT Premium Gym',
+    seoTitle: 'Academia em Francisco Beltrão · GoFit Premium Gym',
     seoDescription: 'GOFIT Francisco Beltrão: musculação, funcional e fit dance, avaliação física e estacionamento próprio. Av. Luiz Antonio Faedo, 1922. Agende sua visita.',
     story: {
       title: 'Espaço para treinar sem esperar.',
@@ -116,7 +116,7 @@ export const UNITS: Record<UnitKey, Unit> = {
     whatsapp: null,
     hours: null,
     pitch: 'Pato Branco tem máquinas Panatta, da Itália, e Real Leader USA, com vagas limitadas.',
-    seoTitle: 'Academia em Pato Branco · GOFIT Premium Gym',
+    seoTitle: 'Academia em Pato Branco · GoFit Premium Gym',
     seoDescription: 'GOFIT Pato Branco: máquinas Panatta (Itália) e Real Leader USA no Centro, Av. Tupi, 1644. Vagas limitadas. Agende sua visita pelo WhatsApp.',
     story: {
       title: 'De Roma para o Sudoeste.',

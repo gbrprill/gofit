@@ -19,7 +19,7 @@ const site = Astro.site!.toString().replace(/\/$/, '');
 const ld = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Organization', '@id': `${site}/#gofit`, name: 'GOFIT Premium Gym', url: `${site}/`, logo: `${site}/img/logo.png`, sameAs: UNIT_ORDER.map((k) => `https://www.instagram.com/${UNITS[k].instagram}/`) },
+    { '@type': 'Organization', '@id': `${site}/#gofit`, name: 'GoFit Premium Gym', url: `${site}/`, logo: `${site}/img/logo.png`, sameAs: UNIT_ORDER.map((k) => `https://www.instagram.com/${UNITS[k].instagram}/`) },
     ...UNIT_ORDER.map((k) => ({
       '@type': 'ExerciseGym',
       '@id': `${site}/${UNITS[k].slug}/#gym`,
@@ -34,7 +34,7 @@ const ld = {
 ---
 <Base
   home
-  title="GOFIT Premium Gym · Centro de treinamento em Realeza, Francisco Beltrão e Pato Branco"
+  title="GoFit Premium Gym · Centro de treinamento em Realeza, Francisco Beltrão e Pato Branco"
   description="Centro de treinamento premium no Sudoeste do Paraná. Musculação, funcional, cross, spinning, fit dance e personal em Realeza, Francisco Beltrão e Pato Branco."
   ld={ld}
 >
