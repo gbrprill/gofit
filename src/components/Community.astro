@@ -1,5 +1,8 @@
 ---
 import { UNITS, UNIT_ORDER, REVIEWS, CTA } from '../data/site';
+// A esteira precisa de pelo menos 6 cartões por volta para cobrir telas largas sem vão.
+const lap = Array.from({ length: Math.ceil(6 / REVIEWS.length) }).flatMap(() => REVIEWS);
+const belt = [...lap, ...lap];
 ---
 <section class="sec" id="comunidade" aria-labelledby="cm-t" style="padding-top:0">
   <div class="wrap">
@@ -16,22 +19,16 @@ import { UNITS, UNIT_ORDER, REVIEWS, CTA } from '../data/site';
         </a>
       ))}
     </div>
-    <div class="rvw" data-rvw>
-      <div class="rvw__vp" tabindex="0" role="region" aria-label="Avaliações de alunos">
-        <ul class="rvw__track">
-          {REVIEWS.map((r) => (
-            <li class="rvw__card">
-              <span class="rvw__mark" aria-hidden="true">“</span>
-              <blockquote><p>{r.text}</p></blockquote>
-              <p class="rvw__who"><b>{r.who}</b><span>{r.source}</span></p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div class="rvw__ctl">
-        <button class="hs__nav" type="button" data-rv="-1" aria-label="Avaliação anterior"><svg aria-hidden="true"><use href="#arrl" /></svg></button>
-        <button class="hs__nav" type="button" data-rv="1" aria-label="Próxima avaliação"><svg aria-hidden="true"><use href="#arr" /></svg></button>
-      </div>
+    <div class="rvw" data-rvw role="region" aria-label="Avaliações de alunos">
+      <ul class="rvw__track">
+        {belt.map((r, i) => (
+          <li class="rvw__card" aria-hidden={i >= REVIEWS.length ? 'true' : undefined}>
+            <span class="rvw__mark" aria-hidden="true">“</span>
+            <blockquote><p>{r.text}</p></blockquote>
+            <p class="rvw__who"><b>{r.who}</b><span>{r.source}</span></p>
+          </li>
+        ))}
+      </ul>
     </div>
     <div class="rvw__join">
       <p class="rvw__jt">Venha fazer parte <span class="y">você também!</span></p>
@@ -41,18 +38,12 @@ import { UNITS, UNIT_ORDER, REVIEWS, CTA } from '../data/site';
 </section>
 
 <script>
-  // Carrossel: rolagem com encaixe; as setas andam um cartão por vez e dão a volta no fim.
+  // Esteira infinita: a lista aparece duas vezes e anda metade do comprimento, então o fim encontra o começo.
+  // A velocidade é fixa em pixels por segundo, qualquer que seja o número de avaliações.
   document.querySelectorAll<HTMLElement>('[data-rvw]').forEach((box) => {
-    const vp = box.querySelector<HTMLElement>('.rvw__vp')!;
-    box.querySelectorAll<HTMLButtonElement>('[data-rv]').forEach((b) => b.addEventListener('click', () => {
-      const card = vp.querySelector<HTMLElement>('.rvw__card');
-      if (!card) return;
-      const step = card.offsetWidth + 16;
-      const max = vp.scrollWidth - vp.clientWidth;
-      const dir = Number(b.dataset.rv);
-      let to = vp.scrollLeft + dir * step;
-      if (to > max + 4) to = 0; else if (to < -4) to = max;
-      vp.scrollTo({ left: to, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    }));
+    const track = box.querySelector<HTMLElement>('.rvw__track')!;
+    const set = () => box.style.setProperty('--rvw-dur', `${Math.max(30, track.scrollWidth / 2 / 28)}s`);
+    set();
+    addEventListener('resize', set);
   });
 </script>

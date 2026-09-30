@@ -154,7 +154,6 @@ export const FAQ: FaqItem[] = [
     a: ['Claro! Agende uma visita e venha conhecer de perto a estrutura, os equipamentos, as modalidades e o ambiente da GOFIT. Nossa equipe apresenta a unidade e ajuda você a encontrar o treino ideal para os seus objetivos. Escolha a unidade mais próxima e venha viver a experiência GOFIT.'],
     cta: { label: 'Agendar visita', kind: 'wa' },
   },
-  { q: 'Tem estacionamento?', a: ['Em Francisco Beltrão, sim: estacionamento próprio com cerca de 60 vagas. Nas outras unidades, pergunte à equipe.'] },
   {
     q: 'Tem avaliação física?',
     a: ['Sim! A avaliação física identifica seu ponto de partida, suas necessidades e seus objetivos. A partir dela, você recebe um treino personalizado, desenvolvido para tornar sua evolução mais segura, eficiente e alinhada ao resultado que deseja alcançar.'],

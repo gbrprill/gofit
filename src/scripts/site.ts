@@ -118,7 +118,6 @@ function openSheet(mode: 'wa' | 'unit' | 'page', origin?: string, mod?: string |
   $('#shprev')!.hidden = mode !== 'wa';
   $('#shgot')!.textContent = mode === 'wa' ? 'Continuar no WhatsApp' : mode === 'page' ? 'Ver a unidade' : 'Confirmar unidade';
   $('#sh-t')!.textContent = mode === 'page' ? 'Qual unidade você quer conhecer?' : 'Em qual unidade você vai treinar?';
-  $('#shgo svg')?.toggleAttribute('hidden', mode !== 'wa');
   const go = $<HTMLAnchorElement>('#shgo')!;
   if (mode === 'wa') go.target = '_blank'; else go.removeAttribute('target');
   shUpdate();
@@ -143,6 +142,18 @@ if (sheet) {
 }
 $$('[data-open-unit]').forEach((b) => b.addEventListener('click', () => { closeMenu(); openSheet('unit'); }));
 $$('[data-open-page]').forEach((b) => b.addEventListener('click', () => openSheet('page')));
+
+/* ============ faq: no computador abre com o mouse; no celular, com toque ============ */
+if (FINE) {
+  const items = $$<HTMLDetailsElement>('.faq details');
+  items.forEach((d) => {
+    let t: number | undefined;
+    // Pequena espera evita abrir tudo quando o mouse só atravessa a lista.
+    d.addEventListener('mouseenter', () => { clearTimeout(t); t = window.setTimeout(() => { items.forEach((o) => { if (o !== d) o.open = false; }); d.open = true; }, 140); });
+    // Fecha só quando o mouse sai da pergunta inteira, resposta incluída.
+    d.addEventListener('mouseleave', () => { clearTimeout(t); t = window.setTimeout(() => { d.open = false; }, 160); });
+  });
+}
 
 document.addEventListener('click', (e) => {
   const a = (e.target as Element).closest?.('[data-wa]') as HTMLAnchorElement | null;

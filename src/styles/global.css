@@ -543,18 +543,18 @@ button { font: inherit; color: inherit; }
 .ig__u { font-family: var(--f-l); font-weight: 600; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--t3); transition: color .4s; }
 .ig:hover .ig__u { color: #3a3000; }
 /* avaliações em carrossel */
-.rvw { margin-top: 16px; }
-.rvw__vp { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; outline-offset: 4px; }
-.rvw__vp::-webkit-scrollbar { display: none; }
-.rvw__track { display: flex; gap: 16px; margin: 0; padding: 0; list-style: none; }
-.rvw__card { flex: 0 0 min(420px, 84%); scroll-snap-align: start; position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; min-height: 260px; padding: clamp(24px, 2.6vw, 36px); background: var(--s2); border-top: 4px solid var(--y); overflow: hidden; }
+.rvw { margin-top: clamp(48px, 6vw, 88px); overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%); }
+.rvw__track { display: flex; gap: 16px; width: max-content; margin: 0; padding: 0; list-style: none; animation: rvw var(--rvw-dur, 60s) linear infinite; }
+.rvw:hover .rvw__track, .rvw:focus-within .rvw__track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .rvw { overflow-x: auto; } .rvw__track { animation: none; } .rvw__card[aria-hidden="true"] { display: none; } }
+@keyframes rvw { to { transform: translateX(calc(-50% - 8px)); } }
+.rvw__card { flex: 0 0 min(400px, 78vw); position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; min-height: 260px; padding: clamp(24px, 2.6vw, 36px); background: var(--s2); border-top: 4px solid var(--y); overflow: hidden; }
 .rvw__mark { position: absolute; right: 18px; top: -18px; font-family: var(--f-d); font-weight: 900; font-size: 160px; line-height: 1; color: var(--y); opacity: .14; pointer-events: none; }
 .rvw__card blockquote { margin: 0; }
 .rvw__card blockquote p { margin: 0; font-family: var(--f-d); font-weight: 900; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.02; text-transform: uppercase; }
 .rvw__who { margin: 0; display: flex; flex-direction: column; gap: 4px; }
 .rvw__who b { font-family: var(--f-l); font-weight: 700; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--y); }
 .rvw__who span { font-size: 15px; color: var(--t2); }
-.rvw__ctl { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
 .rvw__join { display: flex; justify-content: space-between; align-items: center; gap: 20px 32px; flex-wrap: wrap; margin-top: clamp(40px, 5vw, 72px); padding-top: clamp(28px, 3vw, 40px); border-top: 1px solid var(--line); }
 .rvw__jt { margin: 0; font-family: var(--f-d); font-weight: 900; font-size: clamp(28px, 3.4vw, 52px); line-height: .95; text-transform: uppercase; }
 @media (max-width: 760px) { .rvw__join .btn { width: 100%; } }
