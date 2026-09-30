@@ -67,7 +67,7 @@ const check = '<svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="
     const seeText = (a: string[]) => list(a.map((s) => (s === 'Planos e horários' ? 'planos e horários' : s.toLowerCase())));
     const render = () => {
       const mo = moments.find((m) => m.v === st.moment);
-      const parts = [`Oi! Quero agendar minha primeira visita${st.unit ? ` na GOFIT ${UNITS[st.unit].name}` : ''}.`];
+      const parts = [`Oi! Quero agendar minha primeira visita${st.unit ? ` na GoFit ${UNITS[st.unit].name}` : ''}.`];
       if (mo) parts.push(`Sobre mim: ${mo.msg}.`);
       if (st.when) parts.push(`Melhor período: ${st.when.toLowerCase()}.`);
       if (st.who) parts.push(st.who === 'so' ? 'Vou sozinho(a).' : 'Vou levar mais alguém.');

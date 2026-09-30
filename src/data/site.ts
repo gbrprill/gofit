@@ -36,7 +36,7 @@ export const CTA = {
   label: 'Agendar visita',
   labelLong: 'Agendar uma visita',
   message: (unit: string, mod?: string | null) =>
-    `Olá, GOFIT! Quero agendar uma visita na unidade ${unit}.${mod ? ` Tenho interesse em ${mod}.` : ''}`,
+    `Olá, GoFit! Quero agendar uma visita na unidade ${unit}.${mod ? ` Tenho interesse em ${mod}.` : ''}`,
 };
 
 export const UNITS: Record<UnitKey, Unit> = {
@@ -192,10 +192,10 @@ export const LEGAL = [
   { unit: 'Pato Branco', cnpj: '62.159.577/0001-06' },
 ];
 
-export function waHref(key: UnitKey, text: string, origin?: string) {
+// A mensagem vai exatamente como o aluno a vê, sem marcação de origem no fim.
+export function waHref(key: UnitKey, text: string, _origin?: string) {
   const u = UNITS[key];
-  const full = origin ? `${text}\n\n#site-${origin}` : text;
-  return `${u.whatsapp ? `https://wa.me/${u.whatsapp}` : 'https://wa.me/'}?text=${encodeURIComponent(full)}`;
+  return `${u.whatsapp ? `https://wa.me/${u.whatsapp}` : 'https://wa.me/'}?text=${encodeURIComponent(text)}`;
 }
 
 export function mapsHref(key: UnitKey) {

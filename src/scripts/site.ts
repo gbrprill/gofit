@@ -593,7 +593,7 @@ if (quiz) {
     $('#qzc1')!.textContent = LBL.obj[Q.obj!];
     $('#qzc2')!.textContent = LBL.niv[Q.niv!];
     $('#qzc3')!.textContent = u.name;
-    const t = `Olá, GOFIT! Fiz o teste do site. Objetivo: ${LBL.obj[Q.obj!]}. Nível: ${LBL.niv[Q.niv!]}. Quero agendar uma visita na unidade ${u.name}. Tenho interesse em ${p1}.`;
+    const t = `Olá, GoFit! Fiz o teste do site. Objetivo: ${LBL.obj[Q.obj!]}. Nível: ${LBL.niv[Q.niv!]}. Quero agendar uma visita na unidade ${u.name}. Tenho interesse em ${p1}.`;
     $<HTMLAnchorElement>('#qzwa')!.href = waHref(k, t, 'teste');
     setUnit(k); showUnit(k);
   };
