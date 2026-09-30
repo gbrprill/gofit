@@ -180,6 +180,10 @@ export const REVIEWS: { text: string; who: string; source: string }[] = [
   { text: 'Estrutura padrão ouro.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
   { text: 'Um sonho de academia.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
   { text: 'Impecável.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'A top 1 de Pato, sem igual.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'Uma verdadeira Premium Gym.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'Academia totalmente diferenciada, não tem nada igual.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
+  { text: 'A melhor do Sudoeste.', who: 'Aluno(a) GOFIT', source: 'Comentário no Instagram' },
 ];
 
 export const LEGAL = [
